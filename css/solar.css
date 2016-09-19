@@ -1,0 +1,18 @@
+.TableHeader { background-color: #efefff;  }
+    .NumericData { font-family: Monospace; text-align: right; width: 8em; font-size:9pt; }
+    .SmallNumericData { font-family: Monospace; text-align: right; width: 5em; font-size:9pt; }
+    .FlatText { font-family: Monospace; }
+    .EventTimeData { font-family: Monospace; }
+    .UnitSup { font-style:normal; font-family: Arial; }
+    .EditDateBox { color: Black; text-align: center; font-family: Monospace; }
+    .EditLatLonBox { font-family: Monospace; }
+    .OptionHeader { font-size: larger; text-decoration: underline; }
+    .ControlBox { border-style: inset; border-width: thin; }
+    .PullDown { font-family: Monospace; }
+    .DateTimeCaption { text-align: center; font-size: smaller; font-family: sans-serif; }
+    #copyright {
+   clear: both;
+   padding-top: 2em;
+   text-align: center;
+   font-size: 0.75em;
+}
