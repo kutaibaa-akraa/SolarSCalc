@@ -1,0 +1,567 @@
+<html dir="rtl" xmlns="../external.html?link=http://www.w3.org/1999/xhtml">
+
+<!-- Mirrored from cosinekitty.com/solar_system.html by HTTrack Website Copier/3.x [XR&CO'2013], Sat, 17 Sep 2016 04:34:06 GMT -->
+<head>
+<title>حاسبة المجموعة الشمسية</title>
+<link type="text/css" rel="stylesheet" href="css/solar.css"><!-- قمت باقتطاع كود الستايل من هنا و وضعه في ملف منفصل اسمه solar.css - المترجم--></style>
+</head>
+<body onload="InitPage()">
+<script language="javascript" type="text/javascript" src="js/constellation.js"></script>
+<script language="javascript" type="text/javascript" src="js/astro_helper.js"></script>
+<script language="javascript" type="text/javascript" src="js/astronomy.js"></script>
+<script language="javascript" type="text/javascript" src="js/cookies.js"></script>
+<script language="javascript" type="text/javascript" src="js/calculate.js">// قمت باقتطاع السكريبت من الملف الاصلي و وضعه في ملف منفصل يدعى calculate.js - المترجم
+     </script>
+  	
+<style type="text/css">
+/* تهيئة الصندوق لعناوين الفقرات القابلة للطي */
+input.button {
+  color: #fff; background: #596178 ;
+  font-size: 1em;
+  font-weight:bold;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  border: solid 1px #ffcf31 ;
+}
+</style>
+<script type="text/javascript">
+function toggleMe(a){
+  var e=document.getElementById(a);
+  if(!e)return true;
+  if(e.style.display=="none"){
+    e.style.display="block"
+  } else {
+    e.style.display="none"
+  }
+  return true;
+}
+</script>
+
+<center>
+<span style="font-family:Arial, Sans-Serif; font-size: large;">حاسبة المجموعة الشمسية - من إعداد <a href="http://www.cosinekitty.com/index.html" target="_blank">Don Cross</a></span>
+<br />
+<span style="font-family:Sans-Serif; font-size:small;">انظر أيضا : [
+    <a href="http://www.cosinekitty.com/astro_calendar.html">Astronomy Calendar</a>
+|   <a href="http://www.cosinekitty.com/sky_view.html">Sky View</a>
+]</span>
+</center>
+<hr />
+<form id="mainForm" action="#">
+    <table>     <!-- begin outer table for coordinate controls -->
+        <tr valign="top">
+            <td>        <!-- begin cartesian coordinate column -->
+                <table cellspacing="0">
+                    <tr>
+                        <td></td>
+                        <td class="OptionHeader">نظام إحداثيات&nbsp;متعامدة</td>
+                    </tr>
+
+                    <tr id="row_Heliocentric">
+                        <td title="إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الشمس">
+                            <input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_Heliocentric" onclick="OnRadioButton_Cartesian(this.id)" />
+                        </td>
+                        <td title="إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الشمس ">مركزه الشمس "Heliocentric"</td>
+                    </tr>
+
+                    <tr id="row_Geocentric">
+                        <td title=" إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الأرض">
+                            <input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_Geocentric" onclick="OnRadioButton_Cartesian(this.id)" />
+                        </td>
+                        <td title=" إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الأرض">مركزه الأرض "Geocentric"</td>
+                    </tr>
+
+                    <tr id="row_None">
+                        <td title="إختر هذا الوضع إن أردت إخفاء الإحداثيات المتعامدة و المسافات">
+                            <input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_None" onclick="OnRadioButton_Cartesian(this.id)" />
+                        </td>
+                        <td title=" إختر هذا الوضع إن أردت إخفاء الإحداثيات المتعامدة و المسافات">(إخفاء)</td>
+                    </tr>
+                </table>
+            </td>       <!-- end cartesian coordinate column -->
+
+            <td width="8%"></td>
+
+            <td>        <!-- begin angular coordinate column -->
+                <table cellspacing="0">
+                    <tr>
+                        <td></td>
+                        <td class="OptionHeader">إحداثيات&nbsp;زاوية</td>
+                    </tr>
+
+                    <tr id="row_Ecliptic" title="Angles relative to plane of Earth's orbit around the Sun.">
+                        <td>
+                            <input type="radio" name="rbGroup_Angular" id="rb_Angular_Ecliptic" onclick="OnRadioButton_Angular(this.id)" />
+                        </td>
+                        <td><a href=" http://www.arab-ency.com/ar/%D8%A7%D9%84%D8%A8%D8%AD%D9%88%D8%AB/%D8%A7%D9%84%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D9%83%D9%8A%D8%A9 " target="_blank">إحداثيات بروجية</a></td>
+                    </tr>
+
+                    <tr id="row_Equatorial" title="Angles relative to Earth's equator.">
+                        <td>
+                            <input type="radio" name="rbGroup_Angular" id="rb_Angular_Equatorial" onclick="OnRadioButton_Angular(this.id)" />
+                        </td>
+                        <td><a href=" http://www.arab-ency.com/ar/%D8%A7%D9%84%D8%A8%D8%AD%D9%88%D8%AB/%D8%A7%D9%84%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D9%83%D9%8A%D8%A9 " target="_blank">إحداثيات استوائية</a></td>
+                    </tr>
+
+                    <tr id="row_Horizontal" title="Angles relative to observer's horizon.">
+                        <td>
+                            <input type="radio" name="rbGroup_Angular" id="rb_Angular_Horizontal" onclick="OnRadioButton_Angular(this.id)" />
+                        </td>
+                        <td><a href=" http://www.arab-ency.com/ar/%D8%A7%D9%84%D8%A8%D8%AD%D9%88%D8%AB/%D8%A7%D9%84%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D9%83%D9%8A%D8%A9" target="_blank">إحداثيات سمتية</a></td>
+                    </tr>
+                </table>
+            </td>       <!-- end angular coordinate column -->
+
+            <td width="8%"></td>
+
+            <td>        <!-- begin geographic coordinate column -->
+                <table>
+                    <tr>
+                        <td colspan="2" class="OptionHeader">الموقع&nbsp;الجغرافي&nbsp;للراصد</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="GeoLat_NS" class="PullDown" onchange="OnGeoLatLongChange()">
+                                <option value="N">شمالا</option>
+                                <option value="S">جنوبا</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input dir="ltr" id="GeoLat_Value" type="text" size="15" class="EditLatLonBox" onkeyup="OnGeoLatLongChange()" />&nbsp;العرض&deg;&nbsp;&nbsp;=
+                        </td>
+                        <td dir="ltr">
+                            <div id="GeoLat_Feedback" style="font-family:Monospace;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="GeoLong_EW" class="PullDown" onchange="OnGeoLatLongChange()">
+                                <option value="W">غربا</option>
+                                <option value="E">شرقا</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input dir="ltr" id="GeoLong_Value" type="text" size="15" class="EditLatLonBox" onkeyup="OnGeoLatLongChange()" />&nbsp;الطول&nbsp;&deg;&nbsp;=
+                        </td>
+                        <td dir="ltr">
+                            <div id="GeoLong_Feedback" style="font-family:Monospace;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input id="SaveButton" disabled="disabled" type="button" value="Save" title="Saves your edited coordinates and starts using them." onclick="SaveGeographicCoordinates();CalculateSolarSystem();" /></td>
+                    </tr>
+                </table>
+            </td>       <!-- end geographic coordinate column -->
+        </tr>
+    </table>    <!-- end outer table for all controls -->
+
+
+    <table>
+        <tr>
+            <td>
+                <table class="ControlBox">     <!-- date/time controls begin -->
+                    <tr>
+                        <td colspan="6">
+                            <center>
+                                <table>
+                                    <tr title="عند اختيارك تفعيل "الوقت الحقيقي" سيتم تحديث البيانات كل ثانية">
+                                        <td><input type="checkbox" id="checkbox_RealTime" onclick="OnCheckBoxRealTime()" /></td>
+                                        <td class="OptionHeader">الوقت الحقيقي - تحديث</td>
+                                    </tr>
+                                </table>
+                            </center>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="text" size="4" id="edit_Year"   class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
+                        <td><input type="text" size="2" id="edit_Month"  class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
+                        <td><input type="text" size="2" id="edit_Day"    class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
+                        <td><input type="text" size="2" id="edit_Hour"   class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
+                        <td><input type="text" size="2" id="edit_Minute" class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
+                        <td><input type="text" size="2" id="edit_Second" class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
+
+                        <td><input type="button" value="Set" id="button_SetDateTime" onclick="OnSetDateTime()" disabled="disabled" /></td>
+                    </tr>
+                    <tr class="DateTimeCaption">
+                        <td>سنة</td>
+                        <td>شهر</td>
+                        <td>يوم</td>
+                        <td>ساعة</td>
+                        <td>دقيقة</td>
+                        <td>ثانية</td>
+
+                        <td>
+                            <input type="button" value="&minus;" id="button_SubtractOneDay" onclick="AddDays(-1)" disabled="disabled" title="إنقاص 1 يوم" />
+                            <input type="button" value="+" id="button_AddOneDay" onclick="AddDays(1)" disabled="disabled" title="زيادة 1 يوم" />
+                         </td>
+                    </tr>
+                </table>    <!-- date/time controls end -->
+            </td>
+
+            <td width="30px"></td>
+
+            <td>
+                <table class="ControlBox">  <!-- angle mode options -->
+                    <tr>
+                        <td colspan="2" class="OptionHeader">طرق عرض قيم الزاوية</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_dms" onclick="SetAngleMode('dms')" /></td>
+                        <td  class="FlatText"><span dir="ltr"> dd&deg; mm' ss&quot;</span></td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_dmm" onclick="SetAngleMode('dmm')" /></td>
+                        <td  class="FlatText"> <span dir="ltr"> dd&deg; mm.mm'</span></td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_decimal" onclick="SetAngleMode('decimal')" /></td>
+                        <td  class="FlatText">dd.ddddd</td>
+                    </tr>
+                </table>
+            </td>
+
+            <td width="30px"></td>
+
+            <td>
+                <table border="1" cellpadding="2" cellspacing="0">     <!-- extra info table: rise/set/culm/etc -->
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <select id="selectBody" onchange="OnSelectBody()">
+                                <option value="Sun">الشمس</option>
+                                <option value="Moon">القمر</option>
+                                <option value="Mercury">عطارد</option>
+                                <option value="Venus">الزهرة</option>
+                                <option value="Mars">المريخ</option>
+                                <option value="Ceres">الكويكب سيريس</option>
+                                <option value="Pallas">الكويكب بالاس</option>
+                                <option value="Juno">الكويكب جونو</option>
+                                <option value="Vesta">الكويكب فستا</option>
+                                <option value="Jupiter">المشتري</option>
+                                <option value="Saturn">زحل</option>
+                                <option value="Uranus">أورانوس</option>
+                                <option value="Neptune">نبتون</option>
+                                <option value="Pluto">بلوتو</option>
+                            </select>
+                            <input type="button" value="تفاصيل ...." onclick="OnDetailsButton()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">شروق</td>
+                        <td><div id="divRiseTime" class="EventTimeData"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">عبور</td>
+                        <td><div id="divCulmTime" class="EventTimeData"></div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">غروب</td>
+                        <td><div id="divSetTime" class="EventTimeData"></div></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <p>
+        <input type="checkbox" id="checkbox_BrightObjectsOnly" onclick="OnVisibilityChange()" />
+        أظهر الأجرام السماوية اللامعة بما يكفي لرؤيتها بالعين المجردة.<br/>
+        
+        <input type="checkbox" id="checkbox_RisenObjectsOnly" onclick="OnVisibilityChange()" />
+        أظهر الأجرام السماوية الظاهرة فوق الأفق.</br>
+        
+        <input type="checkbox" id="checkbox_ShowComets" onclick="OnVisibilityChange()" />
+        إظهار المذنبات.<br/>
+        
+        <input type="checkbox" id="checkbox_ShowMinor" onclick="OnVisibilityChange()" />
+        إظهار الكويكبات الصغيرة.<br/>
+    </p>
+</form>
+
+<div dir="ltr" id="divDateTime"></div>
+
+<table dir="ltr" id="planetTable" border="1" cellpadding="2" cellspacing="0">
+    <tr>
+        <th class="TableHeader" style="width: 8em;" title="أسماء الأجرام اللامعة غامقة. و أسماء الأجرام الأخفت - غير مرئية بالعين المجردة - فضية اللون.">الجرم السماوي</th>
+        <th id="th_x">x</th>
+        <th id="th_y">y</th>
+        <th id="th_z">z</th>
+        <th id="th_distance" class="TableHeader" title="بعد الجرم السماوي عن مركز الأرض (وضعية geocentric)  أو عن مركز الشمس the Sun (وضعية  heliocentric), مقدرة بالواحدة الفلكية  AU.">المسافة&nbsp;<br/><a href="http://en.wikipedia.org/wiki/Astronomical_units" target="_blank"> AU</a></th>
+        <th class="TableHeader" title="اللمعان الظاهري المرئي">القدر الظاهري</th>
+        <th class="TableHeader" title="الاستطالة: هي الزاوية بين الجرم السماوي و الشمس لدى النظر إليهما من الأرض. ">
+    الاستطالة
+    </th>
+        <th class="TableHeader" title="Constellation">الكوكبة</th>
+        <th class="TableHeader" id="th_Angle1"></th>
+        <th class="TableHeader" id="th_Angle2"></th>
+    </tr>
+</table>
+<p></p>
+<hr />
+
+<div>
+<input type="button" class="button" onclick="return toggleMe('para1')" value=" ملاحظات Don Bross">
+</div>
+<div id="para1" style="display:none">
+<p>
+    This is a demo page for my Javascript astronomy engine, <a href="astronomy.js" type="text/plain">astronomy.js</a>.
+    The algorithms here are based on formulas mostly from <a href="http://www.stjarnhimlen.se/">Paul Schlyter's</a>
+    web page
+    <a href="../external.html?link=http://www.stjarnhimlen.se/comp/ppcomp.html">How to compute planetary positions</a>.
+    I also used information from the following books:
+</p>
+<ul>
+    <li><a href="../external.html?link=http://www.amazon.com/Practical-Astronomy-Calculator-Peter-Duffett-Smith/dp/0521356997">Practical Astronomy with your Calculator</a>,
+        third edition, by Peter Duffett-Smith, Cambridge University Press.
+        ISBN&nbsp;0&nbsp;521&nbsp;35629&nbsp;6
+    </li>
+    <li><a href="../external.html?link=http://www.amazon.com/Astronomy-Personal-Computer-Oliver-Montenbruck/dp/3540672214/">Astronomy on the Personal Computer</a>,
+        by Oliver Montenbruck and Thomas Pfleger.
+        ISBN-13:&nbsp;978-3540672210
+    </li>
+</ul>
+<p>
+    I obtained orbital elements for the four major asteroids using the JPL Small-Body Database Browser:<br/>
+    <a href="../external.html?link=http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=1">1&nbsp;Ceres</a>,
+    <a href="../external.html?link=http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2">2&nbsp;Pallas</a>,
+    <a href="../external.html?link=http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=3">3&nbsp;Juno</a>,
+    <a href="../external.html?link=http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=4">4&nbsp;Vesta</a>.
+</p>
+<p>
+    I also added &quot;67P/C-G&quot; in the table for comet <a href="../external.html?link=http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=67P">67P/Churyumov-Gerasimenko</a>.
+</p>
+<p>
+    The sky coordinates calculated here will generally be within 2 or 3 arcminutes of accuracy
+    (about one-tenth the apparent angular diameter of the moon), although results will be
+    worse for the asteroids (Ceres, Pallas, Vesta, and Juno) for years before 2010 or after 2020.  
+    This is because I calculate asteroid orbits as perfect ellipses that closely approximate their behavior in 2015, but 
+    I do not correct for how these orbits drift over time.  
+    I intend to update this page every year or two to use the latest orbital elements for these asteroids, 
+    so that calculations for nearby dates will always be reasonably accurate.
+    <b>If you need really accurate data</b> for a planet or asteroid, try the 
+    <a href="../external.html?link=http://ssd.jpl.nasa.gov/?horizons">JPL HORIZONS System</a>.
+    (These guys were navigating spacecraft through the solar system when I was still playing with GI Joe!)
+</p>
+</div>
+
+<div>
+<input type="button" class="button" onclick="return toggleMe('para2')" value=" Other useful astronomy calculation resources: ">
+</div>
+<div id="para2" style="display:none">
+
+<p>
+<ul>
+    <li><a href="../external.html?link=http://www.stargazing.net/kepler/">Approximate astronomical positions</a> - by <a href="../external.html?link=http://www.stargazing.net/kepler/kpb.html">Keith Burnett</a>.</li>
+</ul>
+</p>
+</div>
+<div>
+<input type="button" class="button" onclick="return toggleMe('para3')" value=" تاريخ التحديثات والتغييرات في الصفحة : ">
+</div>
+<div id="para3" style="display:none">
+<ul dir="ltr">
+	<li dir="rtl">تم ترجمة الصفحة بتاريخ 17/09/2016 من قبل قتيبة أقرع بتصرف ،إذ تم إحداث تغيير في بنية الصفحة بشكل بسيط و إعادة ترتيب ملفات js و css.</li>
+<li> $Log: solar_system.html,v $
+    Revision 1.49  2009/10/26 15:29:51  Don.Cross
+    Steve Carlson pointed out to me that the distance displayed for each planet is the distance from the Earth,
+    whether the calculator is in geocentric mode or heliocentric mode.  I have changed it to be the distance
+    from the Sun when in heliocentric mode.  Great idea!</li>
+
+ <li>   Revision 1.48  2009/03/10 15:54:01  Don.Cross
+    I noticed that this page looked icky in Internet Explorer because it would wrap the numbers in the cells.
+    I now display 2 digits fewer precision (not needed anyway) and adjusted the column widths. </li>
+
+ <li>   Revision 1.47  2009/03/08 00:02:10  Don.Cross
+    My C# astro.exe (compiled as sun.exe) now has a "javascript" option that generates constellation.js.
+    This new constellation.js file contains the data needed for constellation calculation based on equatorial coordinates.
+    I updated my astronomy.js code to allow use of this data to determine a constellation.
+    The page solar_system.html uses this now to show the concise constellation symbol for each celestial body. </li>
+
+  <li>  Revision 1.46  2009/03/06 22:47:05  Don.Cross
+    Added list of other resources.
+</li>
+
+  <li>  Revision 1.45  2009/01/16 22:14:29  Don.Cross
+    Now there are buttons to add/subtract 1 day. </li>
+
+  <li>  Revision 1.44  2008/03/19 20:59:54  Don.Cross
+    Added links to Astronomy Calendar and Sky View pages. </li>
+
+  <li>  Revision 1.43  2008/03/19 20:43:55  Don.Cross
+    Implemented visual magnitude calculation.
+    Solar System page displays both magnitude and sun angle now. </li>
+
+  <li>  Revision 1.42  2008/03/02 22:32:24  Don.Cross
+    Implemented Details button that opens a new window and dynamically generates HTML about the selected body.
+    Currently this is just an altitude-azimuth chart for the body, but in the future will contain more stuff. </li>
+
+  <li>  Revision 1.41  2008/03/01 21:39:08  Don.Cross
+    Minor cosmetic fiddling with Rise/Set/Culm table. </li>
+
+  <li>  Revision 1.40  2008/03/01 17:47:07  Don.Cross
+    Because angle display mode can be changed, no longer have tool tips contain "minutes and seconds".
+    Added more tool tips: angular coordinate options.
+    Make explanatory links open a new window/tab. </li>
+
+   <li> Revision 1.39  2008/03/01 17:28:34  Don.Cross
+    Minor cosmetic changes:
+    Angle display mode "dd.ddddd" etc now shown in monospace font.
+    Column widths changed from 9em to 8em. </li>
+
+  <li>  Revision 1.38  2008/03/01 15:19:58  Don.Cross
+    Added Astronomy.IsBodyName().
+    Instead of ugly links from planet names to calculate extra info, made select box
+    in the extra info box itself to choose the object.
+    Made the choice persistent via a cookie. </li>
+
+  <li>  Revision 1.37  2008/02/28 23:28:11  Don.Cross
+    Implemented calculation of rise, set, and culmination of a body.
+    When user clicks on a body's name, display rise, set and culmination times for it.
+    Default to showing sunrise, sun culmination, and sunset. </li>
+
+ <li>   Revision 1.36  2008/02/27 18:36:07  Don.Cross
+    Made all options persistent using cookies. </li>
+
+   <li> Revision 1.35  2008/02/26 23:18:29  Don.Cross
+    I was getting weird inconsistencies in the day value computed from a manually entered date and time.
+    Tracked this down to left-over residue in the milliseconds in AstroDateTime.
+    Doing AstroDateTime.setMilliseconds(0) fixed this... yay! </li>
+
+  <li>  Revision 1.34  2008/02/24 03:20:45  Don.Cross
+    Immediately update calculations when geographic coordinates are modified. </li>
+
+  <li>  Revision 1.33  2008/02/22 23:11:29  Don.Cross
+    Starting to work on graphical sky view in JavaScript.
+    Factored out some code for managing user's geographic location in cookies and form elements
+     from solar_system.html into new file astro_helper.js.
+    Adding star_catalog.js, which was translated from text file by my GenStarMapJS.exe program. </li>
+
+  <li>  Revision 1.32  2008/02/22 21:52:18  Don.Cross
+    Implemented Pluto. </li>
+
+   <li> Revision 1.31  2008/02/22 18:59:44  Don.Cross
+    Factored out inline style directives into CSS classes. </li>
+
+  <li>  Revision 1.30  2008/02/21 04:07:41  Don.Cross
+    Forgot to update feedback from user's location to pass new parameter to HtmlDeclination. </li>
+
+ <li>   Revision 1.29  2008/02/21 03:19:19  Don.Cross
+    Allow user to display angles in dd:mm:ss or in decimal degrees. </li>
+
+ <li>   Revision 1.28  2008/02/18 20:24:18  Don.Cross
+    More fun with pastel color highlighting.
+    Used cellspacing=0 to get rid of annoying gaps in the color background. </li>
+
+  <li>  Revision 1.27  2008/02/18 19:58:18  Don.Cross
+    Cosmetic tweaks:
+    Use more muted colors for geocentric/heliocentric highlighting.
+    Also highlight the Sun or the Earth, along with (x,y,z), for heliocentric/geocentric. </li>
+
+  <li>  Revision 1.26  2008/02/18 18:40:07  Don.Cross
+    Fixed dumb bug in OnSetDateTime: it was thinking second==0 was not valid, because I had 'if (second)' instead of 'if (second != null)'. </li>
+
+   <li> Revision 1.25  2008/02/18 17:27:46  Don.Cross
+    Now user can set date and time manually when the real-time check box is not checked. </li>
+
+  <li>  Revision 1.24  2008/02/18 15:47:54  Don.Cross
+    I had a misunderstanding about cookie expiration: I thought that omitting an expiration date meant that they didn't expire.
+    Instead, it turns out that they expire as soon as the browser session ends.
+    I have changed these to expire after 10 years. </li>
+
+   <li> Revision 1.23  2008/02/17 23:19:22  Don.Cross
+    Got horizontal coordinates working!
+    Fixed bugs in solar_system.html with not loading/applying polarity of lat/lon correctly. </li>
+
+  <li>  Revision 1.22  2008/02/17 21:46:12  Don.Cross
+    Now the user can edit his geographic coordinates and save them in a cookie.
+    The format is allowed to be either decimal or dd:mm:ss.
+    Whichever format the user enters, we display feedback in the opposite format. </li>
+
+  <li>  Revision 1.21  2008/02/17 20:07:17  Don.Cross
+    Starting to add options to display different kinds of angular coordinates.
+    Adding controls to enter geographic coordinates. </li>
+
+   <li> Revision 1.20  2008/02/16 20:27:32  Don.Cross
+    Moved HTML funtions out of astronomy.js and into solar_system.html, because they make more sense there,
+    and because I wanted to use a style class defined in the latter.
+    Do not even try to calculate/display equatorial coordinates for the Earth! </li>
+
+  <li>  Revision 1.19  2008/02/16 19:21:03  Don.Cross
+    Change colors of cartesian coordinate headers between yellow and green for heliocentric/geocentric.
+    Added screen tips and links to help explain some of the techinical terms. </li>
+
+  <li>  Revision 1.18  2008/02/16 02:59:59  Don.Cross
+    Display RA and DEC in nice HTML format with hours/degrees, minutes, seconds. </li>
+
+  <li>  Revision 1.17  2008/02/16 02:33:56  Don.Cross
+    Implemented calculation of equatorial coordinates (RA, DEC), but not yet with topocentric parallax correction. </li>
+
+  <li>  Revision 1.16  2008/02/15 22:41:33  Don.Cross
+    Weird: IE does not unescape apostrophe code like Firefox does. </li>
+
+   <li> Revision 1.15  2008/02/15 22:39:15  Don.Cross
+    Renamed "Astronomy.Planet" array to "Astronomy.Body", and also includes in it the Sun and Moon.
+    In the future I may include some famous comets and large asteroids also.
+</li>
+  <li>  Revision 1.14  2008/02/15 22:33:47  Don.Cross
+    Fixed IE compatibility bug: needed to use 'onclick' instead of 'onchange' for check box. This works either way in Firefox.
+    Added type to emphasize that astronomy.js should be loaded as a text file, but IE seems to insist on scaring the user about running it,
+    instead of just showing the text on the screen. </li>
+
+  <li>  Revision 1.13  2008/02/15 22:24:21  Don.Cross
+    Display dates in monospace font.
+</li>
+  <li>  Revision 1.12  2008/02/15 22:16:46  Don.Cross
+    When real-time update is not selected, do not update date and time when switching between coordinate systems.
+    Also, use new global variable AstroDateTime, to facilitate editing the date/time later. </li>
+
+   <li> Revision 1.11  2008/02/15 22:11:38  Don.Cross
+    Added web and book references.
+</li>
+  <li>  Revision 1.10  2008/02/15 21:52:03  Don.Cross
+    Jazzed up the page with interactive controls:
+    Can enable/disable real-time update using a check box.
+    Can select between geocentric and heliocentric coordinates using radio buttons. </li>
+
+  <li>  Revision 1.9  2008/02/15 21:14:10  Don.Cross
+    Implemented the Moon.
+    Implemented geocentric coordinates for all bodies. </li>
+
+  <li>  Revision 1.8  2008/02/15 20:25:23  Don.Cross
+    Added Sun as a celestial body. </li>
+
+  <li>  Revision 1.7  2008/02/15 16:19:42  Don.Cross
+    Now using style sheets to specify row/column behavior.
+    Instead of purging and re-creating the table each time, I assign unique identifiers to each cell and recycle them.
+    This prevents a problem with Firefox rendering the table in a "jumpy" manner. </li>
+
+  <li>  Revision 1.6  2008/02/15 15:35:48  Don.Cross
+    Made the cartesian coordinate table look nicer. </li>
+
+   <li> Revision 1.5  2008/02/15 03:01:25  Don.Cross
+    Implemented Mercury and Venus.
+    Display coordinates in a table instead of clunky text.
+    Display coordinates updated every second in real time. </li>
+
+  <li>  Revision 1.4  2008/02/14 23:25:56  Don.Cross
+    Fixed bug in AstronomyClass: was off by 1 day.
+    Got Mars working, which is the framework for Mercury and Venus as well.
+    To do the outer planets (except Pluto), I will need to implement perturbation.
+    Pluto is a special case and will be coded separately. </li>
+
+  <li>  Revision 1.3  2008/02/14 22:36:05  Don.Cross
+    Display human-friendly date and time along with numeric day value. </li>
+
+   <li> Revision 1.2  2008/02/14 22:28:11  Don.Cross
+    Got Earth cartesian coordinate formulas working. </li>
+
+   <li> Revision 1.1  2008/02/14 22:03:05  Don.Cross
+    Unit test for HTML version of astronomy.js
+
+</li>
+</ul>
+</div>
+<p id="copyright">ترجمة و إعداد : <a href="https://sites.google.com/site/interactiveastronomy">قتيبة أقرع</a></p>
+</body>
+
+<!-- Mirrored from cosinekitty.com/solar_system.html by HTTrack Website Copier/3.x [XR&CO'2013], Sat, 17 Sep 2016 04:34:17 GMT -->
+</html>
