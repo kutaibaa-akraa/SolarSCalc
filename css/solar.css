@@ -16,3 +16,6 @@
    text-align: center;
    font-size: 0.75em;
 }
+.left {text-align: left}
+.right {text-align: right}
+.center {text-align: center}
