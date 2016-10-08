@@ -1,4 +1,4 @@
-// تم اقتطاع هذا الملف من الصفحة الخاصة بالحسابات الفلكية للمجموعة الشمسية 
+// تم اقتطاع هذا الملف من الصفحة الرئيسية solar_system.html و هي تقوم بالحسابات الفلكية للمجموعة الشمسية 
 // 18 - 09 - 2016 قتيبة أقرع 
 var Flag_RealTimeUpdate = true;
     var CartesianCoordinateType = null;
@@ -41,7 +41,7 @@ var Flag_RealTimeUpdate = true;
             // The target will be the cell.  We need the row it belongs to.
             // We can deduce the row because we use a pattern for identifiers.
             // For example: 'Sun_row', 'Sun_const', etc.
-            var name = id.replace (/_.*$/, "");    // get the object name by itself, e.g. "Sun" or "Mercury"
+  var name = id.replace (/_.*$/, "");    // get the object name by itself, e.g. 'Sun' or 'Mercury'
             var row = $(name + "_row");
             if (row) {
                 var bg = RowBackgroundTable [row.id];
@@ -111,7 +111,7 @@ var Flag_RealTimeUpdate = true;
 
         switch (CartesianCoordinateType) {
             case "heliocentric":
-                distance = p.DistanceFromSun (day);
+          distance = p.DistanceFromSun (day);
                 pc = p.EclipticCartesianCoordinates (day);
                 break;
 
@@ -155,15 +155,15 @@ var Flag_RealTimeUpdate = true;
                 break;
 
             case "ecliptic":
-                if (p.Name != "Sun") {
+                if (p.Name != 'Sun') {
                     var ec = p.EclipticAngularCoordinates (day);
                     raHtml  = HtmlDeclination (ec.longitude);
                     decHtml = HtmlDeclination (ec.latitude);
                 }
                 break;
 
-            case "horizontal":
-                if (p.Name != "Earth") {
+         case "horizontal":
+              if (p.Name != "Earth") {
                     var hc = p.HorizontalCoordinates (day, location);
                     raHtml = HtmlDeclination (hc.azimuth);
                     decHtml = HtmlDeclination (hc.altitude);
@@ -210,7 +210,7 @@ var Flag_RealTimeUpdate = true;
                 throw ("Internal error - don't know how to highlight colors for '" + CartesianCoordinateType + "'");
         }
         
-        if (NameCurrentlyHighlighted != "Sun") {
+        if (NameCurrentlyHighlighted != 'Sun') {
             $('Sun_name'    ).style.backgroundColor = bgColorSun;
             $('Sun_x'       ).style.backgroundColor = bgColorSun;
             $('Sun_y'       ).style.backgroundColor = bgColorSun;
@@ -256,7 +256,7 @@ var Flag_RealTimeUpdate = true;
         var day = Astronomy.DayValue (AstroDateTime);
 
         var text = "<code>" + AstroDateTime.toString() + "</code></br>";
-        text += "<code>Day Value = " + day.toFixed(5) + "</code><br/>";
+        text += "<code>عدد الأيام بدءا من تاريخ 01/01/2000 = " + day.toFixed(5) + "</code><br/>";
         $('divDateTime').innerHTML = text;
 
         $('th_x').title = CartesianCoordinateType + " x-coordinate in AU";
@@ -582,9 +582,9 @@ var Flag_RealTimeUpdate = true;
         doc.writeln ("<h3>جدول بقيم الارتفاع/الانحراف الزاوي بتاريخ<br/> " + when.toLocaleDateString() + "</h3>");
         doc.writeln ("<table style='text-align:right; font-family:Monospace;'>");
         doc.write ("<tr>");
-        doc.write ("<td style='width:6em;'>الوقت</td>");
-        doc.write ("<td style='width:10em;'>الانحراف الزاوي</td>");
-        doc.write ("<td style='width:10em;'>الارتفاع</td>");
+        doc.write ("<td style='width:6em;'>Time</td>");
+        doc.write ("<td style='width:10em;'>Azimuth</td>");
+        doc.write ("<td style='width:10em;'>Elevation</td>");
         doc.writeln ("</tr>");
 
         var TIME_STEP_MINUTES = 5;      // number of minutes between time steps
@@ -686,15 +686,15 @@ var Flag_RealTimeUpdate = true;
                 AngularCoordinateType = "ecliptic";
                 toolTip1 = "Ecliptic longitude.";
                 toolTip2 = "Ecliptic latitude.";
-                header1 = '<a href="http://en.wikipedia.org/wiki/Ecliptic_longitude" target="_blank">الطول البروجي</a>';
-                header2 = '<a href="http://en.wikipedia.org/wiki/Ecliptic_latitude" target="_blank">العرض البروجي</a>';
+                header1 = '<a href="http://en.wikipedia.org/wiki/Ecliptic_longitude" target="_blank">طول بروجي</a>';
+                header2 = '<a href="http://en.wikipedia.org/wiki/Ecliptic_latitude" target="_blank">عرض بروجي</a>';
                 break;
 
             case "rb_Angular_Equatorial":
                 AngularCoordinateType = "equatorial";
                 toolTip1 = "Right Ascension in sidereal hours.";
                 toolTip2 = "Declination in angular degrees.";
-                header1 = '<a href="http://en.wikipedia.org/wiki/Right_ascension" target="_blank">المطلع المستقيم<br/> ( RA )</a>';
+                header1 = '<a href="http://en.wikipedia.org/wiki/Right_ascension" target="_blank">مطلع مستقيم<br/> ( RA )</a>';
                 header2 = '<a href="http://en.wikipedia.org/wiki/Declination" target="_blank">الميل <br/> ( DEC )</a>';
                 break;
 
@@ -702,8 +702,8 @@ var Flag_RealTimeUpdate = true;
                 AngularCoordinateType = "horizontal";
                 toolTip1 = "Compass direction clockwise from North.";
                 toolTip2 = "Angle above the horizon.";
-                header1 = '<a href="http://en.wikipedia.org/wiki/Horizontal_coordinate_system" target="_blank">الانحراف الزاوي</a>';
-                header2 = '<a href="http://en.wikipedia.org/wiki/Horizontal_coordinate_system" target="_blank">الارتفاع</a>';
+                header1 = '<a href="http://en.wikipedia.org/wiki/Horizontal_coordinate_system" target="_blank">انحراف زاوي</a>';
+                header2 = '<a href="http://en.wikipedia.org/wiki/Horizontal_coordinate_system" target="_blank">ارتفاع</a>';
                 break;
 
             default:
@@ -813,9 +813,9 @@ var Flag_RealTimeUpdate = true;
 
     function LoadOption_SelectedObject()
     {
-        var name = ReadCookie ("SelectedCelestialBody", "Sun");
+        var name = ReadCookie ("SelectedCelestialBody", 'Sun');
         if (!Astronomy.IsBodyName(name) || (name == "Earth")) {
-            name = "Sun";
+            name = 'Sun';
         }
         var select = $('selectBody');
         for (var i=0; i < select.options.length; ++i) {
