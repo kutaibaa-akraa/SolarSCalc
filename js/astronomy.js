@@ -284,7 +284,7 @@ function EarthClass()
 
 function PlutoClass()
 {
-    this.Name = "بلوتو";
+    this.Name = "Pluto";
     this.EclipticCartesianCoordinates = function(day)
     {
         var S  =   50.03  +  (0.033459652 * day);
@@ -856,7 +856,7 @@ function CreatePlanetJPL(       //  Designed for use with JPL orbital data
 
 function CreateJupiter() {
     var planet = CreatePlanetJPL(
-        "المشتري",
+        "Jupiter",
         5.20288700,  -0.00011607,    // ja0, jac = semi-major axis (AU), rate (AU/century)
         0.04838624,  -0.00013253,    // je0, jec = eccentricity (1), (1/century)
         1.30439695,   0.00183714,    // jI0, jIc = inclination (deg), (deg/century)
@@ -921,7 +921,7 @@ function CreateSaturnJPL()
 function CreateSaturn()
 {
     var planet = new PlanetPS (
-        "زحل", 
+        "Saturn", 
         113.6634, 2.3898e-5, 2.4886, -1.081e-7, 339.3939, 2.97661e-5, 9.55475, 0.0, 0.055546, -9.499e-9, 316.9670, 0.0334442282,    // orbital elements
         -9.0, 0.044, 0, 0     // visual magnitude elements
     );
@@ -960,7 +960,7 @@ function CreateSaturn()
 function CreateUranus()
 {
     var planet = CreatePlanetJPL(
-        "أورانوس", 
+        "Uranus", 
         19.18916464,   -0.00196176,     // ja0, jac = semi-major axis (AU), rate (AU/century)
          0.04725744,   -0.00004397,     // je0, jec = eccentricity (1), (1/century)
          0.77263783,   -0.00242939,     // jI0, jIc = inclination (deg), (deg/century)
@@ -997,7 +997,7 @@ function MeanLongitudeOfSun (d)
 function CreateMoon()
 {
     var moon = new PlanetPS (
-        "القمر",
+        "Moon",
         125.1228, -0.0529538083, 5.1454, 0, 318.0634, 0.1643573223, 60.2666 / EARTH_RADII_PER_ASTRONOMICAL_UNIT, 0, 0.054900, 0, 115.3654, 13.0649929509,
         0.23, 0.026, 4.0e-9, 4
     );
@@ -1359,19 +1359,20 @@ function AstronomyClass()
     this.Sun     = new SunClass();
     this.Moon    = CreateMoon();
     
-    this.Mercury = new PlanetPS ("عطارد", 48.3313, 3.24587e-5, 7.0047, 5.0e-8, 29.1241, 1.01444e-5, 0.387098, 0.0, 0.205635, 5.59e-10, 168.6562, 4.0923344368, -0.36, 0.027, 2.2e-13, 6);
-    this.Venus   = new PlanetPS ("الزهرة", 76.6799, 2.46590e-5, 3.3946, 2.75e-8, 54.8910, 1.38374e-5, 0.723330, 0.0, 0.006773, -1.302e-9, 48.0052, 1.6021302244, -4.34, 0.013, 4.2e-7, 3);
+    this.Mercury = 
+    new PlanetPS ("Mercury", 48.3313, 3.24587e-5, 7.0047, 5.0e-8, 29.1241, 1.01444e-5, 0.387098, 0.0, 0.205635, 5.59e-10, 168.6562, 4.0923344368, -0.36, 0.027, 2.2e-13, 6);
+    this.Venus   = new PlanetPS ("Venus", 76.6799, 2.46590e-5, 3.3946, 2.75e-8, 54.8910, 1.38374e-5, 0.723330, 0.0, 0.006773, -1.302e-9, 48.0052, 1.6021302244, -4.34, 0.013, 4.2e-7, 3);
     this.Earth   = new EarthClass();
-    this.Mars    = new PlanetPS ("المريخ", 49.5574, 2.11081e-5, 1.8497, -1.78e-8, 286.5016, 2.92961e-5, 1.523688, 0.0, 0.093405, 2.516e-9, 18.6021, 0.5240207766, -1.51, 0.016, 0, 0);
+    this.Mars    = new PlanetPS ("Mars", 49.5574, 2.11081e-5, 1.8497, -1.78e-8, 286.5016, 2.92961e-5, 1.523688, 0.0, 0.093405, 2.516e-9, 18.6021, 0.5240207766, -1.51, 0.016, 0, 0);
 
     // Asteroids and comets    
     //                             name       epochJD     Nx=long asc node   i=inclination       w=arg of peri       a=semi-major axis  e=eccentricity       Mx=mean anom@epoch  T=orbital period   abs mag
-    this.Ceres   = CreateAsteroid ("سيريس",   2457000.5,  80.32926547452543, 10.59338616262872,  72.52203270043788,  2.76750591440571,  0.07582276595896797,  95.98917578768719, 1681.633163085685,  4.18);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=1
-    this.Pallas  = CreateAsteroid ("بالاس",  2457000.5, 173.0962475866183,  34.84099788068097,  309.9303277309815,  2.771606108489468, 0.2312736282433415,   78.22870368538561, 1685.371678425934,  5.15);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2
-    this.Juno    = CreateAsteroid ("جونو",    2457000.5, 169.8711811946533,  12.98166179450518,  248.4099652667037,  2.670700240558908, 0.2554482627817375,   33.07715332505229, 1594.175554183099,  5.91);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=3
-    this.Vesta   = CreateAsteroid ("فيستا",   2457000.5, 103.8513672233257,   7.140427316529066, 151.1985275178533,  2.361793227026224, 0.08874017002173754,  20.86384148999364, 1325.748779938602,  3.67);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=4
-    this.Ida     = CreateMinor    ("إيدا",     2457000.5, 324.0275757719688,   1.132199172379656, 110.4961991586997,  2.862142759005513, 0.04143441719730059, 276.9785940904641,  1768.623391686735,  9.94);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=243
-    this.Gaspra  = CreateMinor    ("غاسبرا",  2457000.5, 253.1678768421052,   4.102608826356864, 129.4892377057742,  2.209868867807942, 0.1734277243451101,  293.2411112895537,  1199.908645279267, 11.46);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=951
+    this.Ceres   = CreateAsteroid ("Ceres",   2457000.5,  80.32926547452543, 10.59338616262872,  72.52203270043788,  2.76750591440571,  0.07582276595896797,  95.98917578768719, 1681.633163085685,  4.18);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=1
+    this.Pallas  = CreateAsteroid ("Pallas",  2457000.5, 173.0962475866183,  34.84099788068097,  309.9303277309815,  2.771606108489468, 0.2312736282433415,   78.22870368538561, 1685.371678425934,  5.15);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=2
+    this.Juno    = CreateAsteroid ("Juno",    2457000.5, 169.8711811946533,  12.98166179450518,  248.4099652667037,  2.670700240558908, 0.2554482627817375,   33.07715332505229, 1594.175554183099,  5.91);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=3
+    this.Vesta   = CreateAsteroid ("Vesta",   2457000.5, 103.8513672233257,   7.140427316529066, 151.1985275178533,  2.361793227026224, 0.08874017002173754,  20.86384148999364, 1325.748779938602,  3.67);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=4
+    this.Ida     = CreateMinor    ("Ida",     2457000.5, 324.0275757719688,   1.132199172379656, 110.4961991586997,  2.862142759005513, 0.04143441719730059, 276.9785940904641,  1768.623391686735,  9.94);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=243
+    this.Gaspra  = CreateMinor    ("Gaspra",  2457000.5, 253.1678768421052,   4.102608826356864, 129.4892377057742,  2.209868867807942, 0.1734277243451101,  293.2411112895537,  1199.908645279267, 11.46);   // http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=951
     this.Comet_9P  =  CreateComet ("9P/T1",   2456717.5,  68.88181348869867, 10.50258430337173,  179.3031328527078,  3.140094842040291, 0.5115944387599365,  203.237608505211,   2032.415859334781, 13.10);   // comet 9P/Tempel 1 : http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=9P  
     this.Comet_19P =  CreateComet ("19P/B",   2456870.5,  75.3828362947892,  30.36856213315691,  353.4432880799574,  3.602573738021955, 0.6255352567887734,  316.6290089712147,  2497.570436475743,  8.90);   // comet 19P/Borrelly : http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=19P
     this.Comet_67P =  CreateComet ("67P/C-G", 2456981.5,  50.14210951437195,  7.040200902346087,  12.78560606538363, 3.462817302992186, 0.6409739314162571,  319.3033467788339,  2353.654952366357, 13.55);   // comet 67P/Churyumov-Gerasimenko : http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=67P
@@ -1381,7 +1382,7 @@ function AstronomyClass()
     this.Saturn  = CreateSaturn();
     //this.SaturnJPL = CreateSaturnJPL();
     this.Uranus  = CreateUranus();
-    this.Neptune = new PlanetPS ("نبتون", 131.7806, 3.0173e-5, 1.7700, -2.55e-7, 272.8461, -6.027e-6, 30.05826, 3.313e-8, 0.008606, 2.15e-9, 260.2471, 0.005995147, -6.90, 0.001, 0, 0);
+    this.Neptune = new PlanetPS ("Neptune", 131.7806, 3.0173e-5, 1.7700, -2.55e-7, 272.8461, -6.027e-6, 30.05826, 3.313e-8, 0.008606, 2.15e-9, 260.2471, 0.005995147, -6.90, 0.001, 0, 0);
     this.Pluto   = new PlutoClass();
     
     this.Body = [
