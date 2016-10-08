@@ -167,10 +167,10 @@ function SaveGeographicCoordinates()
 function LoadGeographicCoordinates()
 {
     $('GeoLat_Value').value  = ReadCookie ("GeographicLatitudeValue",  "33.3593653");
-    $('GeoLong_Value').value = ReadCookie ("GeographicLongitudeValue", "36.20397019999996");
+    $('GeoLong_Value').value = ReadCookie ("GeographicLongitudeValue", "36.2039702");
     
     $('GeoLat_NS').selectedIndex  = ReadCookie("GeographicLatitudeDirection","N")  == "N" ? 0 : 1;
-    $('GeoLong_EW').selectedIndex = ReadCookie("GeographicLongitudeDirection","E") == "E" ? 0 : 1;
+    $('GeoLong_EW').selectedIndex = ReadCookie("GeographicLongitudeDirection","E") == "E" ? 1 : 0;
     
     CommitGeographicCoordinates();
 }
