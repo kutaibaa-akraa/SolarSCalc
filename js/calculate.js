@@ -415,13 +415,92 @@ function OnCheckBoxRealTime() {
     }
 }
 
+// متغيرات التحكم في سرعة محاكاة الزمن
+var TimeSpeed = 1.0;           // مضاعف السرعة (1 = الوقت الحقيقي، 10 = أسرع 10 مرات، 0.1 = أبطأ 10 مرات)
+var IsPaused = false;          // حالة الإيقاف المؤقت
+var LastTimerUpdate = Date.now(); // تستخدم لحساب الفرق الزمني بدقة
+
 function Timer() {
-    if (Flag_RealTimeUpdate) {
-        AstroDateTime = new Date();
-        ReflectDateTime(AstroDateTime);
-        CalculateSolarSystem();
+    try {
+        if (Flag_RealTimeUpdate) {
+            var now = Date.now();
+            var deltaSeconds = (now - LastTimerUpdate) / 1000.0;
+            LastTimerUpdate = now;
+            
+            // منع القفزات الكبيرة عند العودة إلى علامة التبويب بعد فترة
+            if (deltaSeconds > 5.0) {
+                deltaSeconds = 0.1;
+            }
+            
+            if (IsPaused) {
+                // الوقت متوقف: لا نقوم بتحديث AstroDateTime
+                // نعيد ضبط LastTimerUpdate لمنع تراكم الفارق عند استئناف التشغيل
+                LastTimerUpdate = Date.now();
+            } else if (TimeSpeed === 1.0) {
+                // الوضع الحقيقي: نأخذ الوقت الفعلي من النظام
+                AstroDateTime = new Date();
+            } else {
+                // وضع المحاكاة: نضيف الفارق الزمني مضروباً في عامل السرعة
+                var deltaMilliseconds = deltaSeconds * TimeSpeed * 1000.0;
+                var newTime = AstroDateTime.getTime() + deltaMilliseconds;
+                AstroDateTime = new Date(newTime);
+            }
+            
+            // تحديث حقول الإدخال وإعادة الحساب
+            ReflectDateTime(AstroDateTime);
+            CalculateSolarSystem();
+        }
+    } catch(e) {
+        console.error("خطأ في Timer: " + e.message);
     }
-    setTimeout('Timer()', 1000);
+    // استدعاء الدالة كل 50 مللي ثانية للحصول على انسيابية عالية
+    setTimeout(Timer, 50);
+}
+
+// تعيين سرعة محددة
+function setTimeSpeed(speed) {
+    TimeSpeed = speed;
+    IsPaused = false; // إلغاء الإيقاف المؤقت تلقائياً عند تغيير السرعة
+    LastTimerUpdate = Date.now(); // إعادة ضبط التوقيت لمنع القفزات
+    UpdateSpeedDisplay(); // تحديث عرض السرعة (الدالة أدناه)
+}
+
+// تبديل حالة الإيقاف المؤقت (تشغيل/إيقاف)
+function togglePause() {
+    IsPaused = !IsPaused;
+    if (!IsPaused) {
+        LastTimerUpdate = Date.now(); // إعادة ضبط التوقيت عند الاستئناف
+    }
+    UpdatePauseButton(); // تحديث مظهر الزر
+}
+
+// العودة إلى الوقت الحقيقي وإعادة ضبط السرعة إلى 1x
+function resetToCurrentTime() {
+    AstroDateTime = new Date();
+    TimeSpeed = 1.0;
+    IsPaused = false;
+    LastTimerUpdate = Date.now();
+    ReflectDateTime(AstroDateTime);
+    CalculateSolarSystem();
+    UpdateSpeedDisplay();
+    UpdatePauseButton();
+}
+
+// تحديث عرض السرعة (اختياري)
+function UpdateSpeedDisplay() {
+    var display = document.getElementById('speedDisplay');
+    if (display) {
+        display.innerText = (IsPaused) ? '⏸' : TimeSpeed + 'x';
+    }
+}
+
+// تحديث زر الإيقاف المؤقت
+function UpdatePauseButton() {
+    var btn = document.getElementById('btnPause');
+    if (btn) {
+        btn.innerText = IsPaused ? '▶️' : '⏸️';
+        btn.title = IsPaused ? 'استئناف الزمن' : 'إيقاف الزمن مؤقتاً';
+    }
 }
 
 function OnDateTimeDirty() {
