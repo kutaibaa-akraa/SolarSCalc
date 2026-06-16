@@ -1,308 +1,387 @@
-<html dir="rtl" xmlns="../external.html?link=http://www.w3.org/1999/xhtml">
-
-<!-- Mirrored from cosinekitty.com/solar_system.html by HTTrack Website Copier/3.x [XR&CO'2013], Sat, 17 Sep 2016 04:34:06 GMT -->
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
 <head>
-<title>حاسبة المجموعة الشمسية</title>
-<link type="text/css" rel="stylesheet" href="css/solar.css"><!-- قمت باقتطاع كود الستايل من هنا و وضعه في ملف منفصل اسمه solar.css - المترجم--></style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>الحاسبة الفلكية - المجموعة الشمسية</title>
+    
+    <!-- Leaflet CSS + JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- الملفات الأصلية للحسابات الفلكية (ترتيب التحميل مهم) -->
+		<script src="js/constellation.js"></script>
+		<script src="js/astronomy.js"></script>
+		<script src="js/cookies.js"></script>
+		<script src="js/astro_helper.js"></script>
+		<script src="js/calculate.js"></script>
+		<script src="js/map.js"></script>
+		<script src="js/orbit.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+		<script src="js/orbit3d.js"></script>
+
+		<!-- OrbitControls (توفر THREE.OrbitControls) -->
+		<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        /* ========================================================================
+         * RESET & BASE STYLES - مستوحاة من scripteditor.css
+         * ======================================================================== */
+				:root {
+						/* الألوان الأساسية */
+						--stel-bg-primary: rgb(86, 87, 90);          /* خلفية الصفحة الرئيسية - رمادي غامق */
+						--stel-bg-secondary: rgb(110, 108, 115);     /* خلفية ثانوية - رمادي */
+						--stel-bg-panel: rgba(149, 150, 152, 0.2);   /* خلفية اللوحات - شفاف رمادي */
+						--stel-bg-dark: rgba(0, 0, 0, 0.15);         /* خلفية داكنة شفافة */
+						--stel-bg-darker: rgba(0, 0, 0, 0.25);       /* خلفية أغمق */
+						--stel-bg-code: rgb(80, 80, 80);             /* خلفية الكود */
+
+						/* ألوان النصوص */
+						--stel-text-primary: rgb(220, 219, 218);     /* النص الرئيسي - أبيض رمادي */
+						--stel-text-secondary: rgb(0, 0, 0);         /* النص الثانوي - أسود (نادر الاستخدام) */
+						--stel-text-muted: rgb(222, 222, 222);       /* نص باهت */
+						--stel-text-dark: rgb(0, 0, 0);              /* نص داكن */
+
+						/* الألوان المميزة (تم تعديل الأصفر الفاقع إلى بيج دافئ) */
+						--stel-accent: #d4b896;                      /* لون مميز للعناوين والحدود - بيج دافئ */
+						--stel-accent-light: rgba(212, 184, 150, 0.2); /* إضاءة خفيفة من البيج */
+						--stel-accent-subtle: rgba(212, 184, 150, 0.1); /* إضاءة خفيفة جداً */
+
+						/* ألوان الحالة */
+						--stel-success: #A6E39E;                     /* أخضر فاتح - نجاح */
+						--stel-error: #F92672;                       /* وردي محمر - خطأ */
+						--stel-info: #66D9EF;                        /* أزرق فاتح - معلومات */
+						--stel-warning: #d4c9a8;                     /* تحذير - بيج مصفر (بدلاً من الأصفر الفاقع) */
+						--stel-number: #AE81FF;                      /* بنفسجي - أرقام */
+
+						/* الخطوط */
+						--stel-font-mono: 'DejaVuSansMono', 'Courier New', 'Consolas', monospace;
+						--stel-font-sans: 'DejaVuSans', Verdana, Helvetica, Arial, sans-serif;
+
+						/* الزوايا */
+						--stel-radius-sm: 3px;
+						--stel-radius-md: 4px;
+						--stel-radius-lg: 6px;
+						--stel-radius-xl: 8px;
+
+						/* ألوان الرسم (canvas) */
+						--canvas-bg: #2A2C2E;                        /* خلفية الرسم - أسود داكن */
+						--canvas-grid: #4A4C4E;                      /* لون شبكة الرسم - رمادي */
+						--canvas-sun: #f5c842;                       /* الشمس - أصفر ذهبي (يمكن تركه) */
+						--canvas-earth: #66D9EF;                     /* الأرض - أزرق */
+						--canvas-mercury: #B4B7B0;                   /* عطارد - رمادي فضي */
+						--canvas-venus: #d4c9a8;                     /* الزهرة - بيج مصفر */
+						--canvas-mars: #F92672;                      /* المريخ - أحمر */
+						--canvas-jupiter: #AE81FF;                   /* المشتري - بنفسجي */
+						--canvas-saturn: #A6E39E;                    /* زحل - أخضر فاتح */
+				}
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            background: var(--stel-bg-primary);
+            color: var(--stel-text-primary);
+            font-family: var(--stel-font-sans);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .solar-dashboard { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .visuals-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .visual-card {
+            background: var(--stel-bg-panel);
+            border: 1px solid var(--stel-border);
+            border-radius: var(--stel-radius-xl);
+            overflow: hidden;
+        }
+        
+        .visual-header {
+            background: var(--stel-bg-dark);
+            padding: 8px 15px;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--stel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .badge { font-size: 10px; background: var(--stel-accent-subtle); padding: 2px 8px; border-radius: 20px; color: var(--stel-accent); }
+        
+        #locationMap { height: 280px; width: 100%; background: #2A2C2E; }
+        #solarCanvas { width: 100%; height: 280px; display: block; background: var(--canvas-bg); }
+        
+        .canvas-toolbar {
+            display: flex; gap: 6px; padding: 6px 12px;
+            background: var(--stel-bg-dark); border-top: 1px solid var(--stel-border);
+            justify-content: center;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            background: var(--stel-bg-dark);
+            padding: 16px;
+            border-radius: var(--stel-radius-xl);
+            border: 1px solid var(--stel-border);
+        }
+        
+        .control-card {
+            background: var(--stel-bg-panel);
+            border-radius: var(--stel-radius-lg);
+            padding: 12px 15px;
+            border: 1px solid var(--stel-border-light);
+        }
+        
+        .control-card h4 { margin: 0 0 12px 0; font-size: 13px; color: var(--stel-accent); border-right: 3px solid var(--stel-accent); padding-right: 8px; }
+        
+        .radio-group { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+        .radio-group label { font-size: 11px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        
+        .geo-input-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .geo-input-group input, .geo-input-group select {
+            background: var(--stel-bg-darker);
+            border: 1px solid var(--stel-border);
+            color: var(--stel-text-primary);
+            padding: 6px 8px;
+            border-radius: var(--stel-radius-sm);
+            font-family: var(--stel-font-mono);
+            font-size: 11px;
+        }
+        
+        .date-time-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0; }
+        .date-time-row input {
+            background: var(--stel-bg-darker);
+            border: 1px solid var(--stel-border);
+            color: var(--stel-text-primary);
+            padding: 5px;
+            border-radius: var(--stel-radius-sm);
+            width: 55px;
+            text-align: center;
+        }
+        
+        button {
+            background: linear-gradient(#5D5F62, #3A3C3E);
+            border: 1px solid #2A2C2E;
+            color: var(--stel-text-primary);
+            padding: 5px 12px;
+            border-radius: var(--stel-radius-sm);
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover { background: linear-gradient(#C4C4C7, #6D6F72); color: #000; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; margin: 10px 0; }
+        .checkbox-group label { font-size: 11px; display: flex; align-items: center; gap: 5px; }
+        
+        .table-wrapper { overflow-x: auto; border-radius: var(--stel-radius-lg); border: 1px solid var(--stel-border); background: var(--stel-bg-dark); }
+        
+        #planetTable { width: 100%; border-collapse: collapse; font-size: 11px; font-family: var(--stel-font-mono); min-width: 900px; }
+        #planetTable th { background: var(--stel-bg-primary); padding: 10px 6px; text-align: center; font-weight: bold; color: var(--stel-accent); border-bottom: 1px solid var(--stel-border); }
+        #planetTable td { padding: 6px 5px; text-align: center; border-bottom: 1px solid var(--stel-border-light); }
+        #planetTable tr:hover td { background: var(--stel-accent-subtle); }
+        
+        .NumericData, .SmallNumericData { font-family: var(--stel-font-mono); text-align: center; direction: ltr; }
+        
+        .info-footer { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-top: 10px; }
+        
+        .rise-set-panel {
+            background: var(--stel-bg-panel);
+            border: 1px solid var(--stel-border);
+            border-radius: var(--stel-radius-lg);
+            padding: 12px;
+        }
+        .rise-set-panel select, .rise-set-panel button { width: 100%; margin-bottom: 8px; }
+        .event-data { font-family: var(--stel-font-mono); font-size: 11px; background: var(--stel-bg-dark); padding: 8px; border-radius: var(--stel-radius-sm); margin-top: 8px; text-align: center; }
+        
+        .collapsible-section { background: var(--stel-bg-panel); border-radius: var(--stel-radius-lg); margin-bottom: 10px; }
+        .collapsible-header { background: var(--stel-bg-dark); padding: 8px 12px; cursor: pointer; font-weight: bold; border-radius: var(--stel-radius-lg); transition: 0.2s; }
+        .collapsible-header:hover { background: var(--stel-accent-subtle); }
+        .collapsible-content { display: none; padding: 12px; border-top: 1px solid var(--stel-border); }
+        
+        #divDateTime { font-family: var(--stel-font-mono); text-align: center; margin: 10px 0; font-size: 12px; }
+        
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+            background: var(--stel-bg-dark);
+            padding: 8px 16px;
+            border-radius: 40px;
+        }
+        
+        hr { border-color: var(--stel-border); }
+    </style>
 </head>
 <body onload="InitPage()">
-<script language="javascript" type="text/javascript" src="js/constellation.js"></script>
-<script language="javascript" type="text/javascript" src="js/astro_helper.js"></script>
-<script language="javascript" type="text/javascript" src="js/astronomy.js"></script>
-<script language="javascript" type="text/javascript" src="js/cookies.js"></script>
-<script language="javascript" type="text/javascript" src="js/calculate.js">// قمت باقتطاع السكريبت من الملف الاصلي و وضعه في ملف منفصل يدعى calculate.js - المترجم
-     </script>
-  	
-<style type="text/css">
-/* تهيئة الصندوق لعناوين الفقرات القابلة للطي */
-input.button {
-  color: #fff; background: #596178 ;
-  font-size: 1em;
-  font-weight:bold;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  border: solid 1px #ffcf31 ;
-}
-</style>
-<script type="text/javascript">
-function toggleMe(a){
-  var e=document.getElementById(a);
-  if(!e)return true;
-  if(e.style.display=="none"){
-    e.style.display="block"
-  } else {
-    e.style.display="none"
-  }
-  return true;
-}
-</script>
-
-<center>
-<span style="font-family:Arial, Sans-Serif; font-size: large;">حاسبة المجموعة الشمسية - من إعداد <a href="http://www.cosinekitty.com/index.html" target="_blank">Don Cross</a></span>
-<br />
-<span style="font-family:Sans-Serif; font-size:small;">انظر أيضا : [
-    <a href="http://www.cosinekitty.com/astro_calendar.html">Astronomy Calendar</a>
-|   <a href="http://www.cosinekitty.com/sky_view.html">Sky View</a>
-]</span>
-</center>
-<hr />
-<form id="mainForm" action="#">
-    <table>     <!-- begin outer table for coordinate controls -->
-        <tr valign="top">
-            <td>        <!-- begin cartesian coordinate column -->
-                <table cellspacing="0">
-                    <tr>
-                        <td></td>
-                        <td class="OptionHeader">نظام إحداثيات&nbsp;متعامدة</td>
-                    </tr>
-
-                    <tr id="row_Heliocentric">
-                        <td title="إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الشمس">
-                            <input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_Heliocentric" onclick="OnRadioButton_Cartesian(this.id)" />
-                        </td>
-                        <td title="إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الشمس ">مركزه الشمس "Heliocentric"</td>
-                    </tr>
-
-                    <tr id="row_Geocentric">
-                        <td title=" إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الأرض">
-                            <input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_Geocentric" onclick="OnRadioButton_Cartesian(this.id)" />
-                        </td>
-                        <td title=" إختر نظام الإحداثيات هذا لرؤية الإحداثيات الكارتيسية المتعامدة و المسافات النسبية بالنسبة لمركز الأرض">مركزه الأرض "Geocentric"</td>
-                    </tr>
-
-                    <tr id="row_None">
-                        <td title="إختر هذا الوضع إن أردت إخفاء الإحداثيات المتعامدة و المسافات">
-                            <input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_None" onclick="OnRadioButton_Cartesian(this.id)" />
-                        </td>
-                        <td title=" إختر هذا الوضع إن أردت إخفاء الإحداثيات المتعامدة و المسافات">(إخفاء)</td>
-                    </tr>
-                </table>
-            </td>       <!-- end cartesian coordinate column -->
-
-            <td width="8%"></td>
-
-            <td>        <!-- begin angular coordinate column -->
-                <table cellspacing="0">
-                    <tr>
-                        <td></td>
-                        <td class="OptionHeader">إحداثيات&nbsp;زاوية</td>
-                    </tr>
-
-                    <tr id="row_Ecliptic" title="Angles relative to plane of Earth's orbit around the Sun.">
-                        <td>
-                            <input type="radio" name="rbGroup_Angular" id="rb_Angular_Ecliptic" onclick="OnRadioButton_Angular(this.id)" />
-                        </td>
-                        <td><a href=" http://www.arab-ency.com/ar/%D8%A7%D9%84%D8%A8%D8%AD%D9%88%D8%AB/%D8%A7%D9%84%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D9%83%D9%8A%D8%A9 " target="_blank">إحداثيات بروجية</a></td>
-                    </tr>
-
-                    <tr id="row_Equatorial" title="Angles relative to Earth's equator.">
-                        <td>
-                            <input type="radio" name="rbGroup_Angular" id="rb_Angular_Equatorial" onclick="OnRadioButton_Angular(this.id)" />
-                        </td>
-                        <td><a href=" http://www.arab-ency.com/ar/%D8%A7%D9%84%D8%A8%D8%AD%D9%88%D8%AB/%D8%A7%D9%84%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D9%83%D9%8A%D8%A9 " target="_blank">إحداثيات استوائية</a></td>
-                    </tr>
-
-                    <tr id="row_Horizontal" title="Angles relative to observer's horizon.">
-                        <td>
-                            <input type="radio" name="rbGroup_Angular" id="rb_Angular_Horizontal" onclick="OnRadioButton_Angular(this.id)" />
-                        </td>
-                        <td><a href=" http://www.arab-ency.com/ar/%D8%A7%D9%84%D8%A8%D8%AD%D9%88%D8%AB/%D8%A7%D9%84%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D9%83%D9%8A%D8%A9" target="_blank">إحداثيات سمتية</a></td>
-                    </tr>
-                </table>
-            </td>       <!-- end angular coordinate column -->
-
-            <td width="8%"></td>
-
-            <td>        <!-- begin geographic coordinate column -->
-                <table>
-                    <tr>
-                        <td colspan="2" class="OptionHeader">الموقع&nbsp;الجغرافي&nbsp;للراصد</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select id="GeoLat_NS" class="PullDown" onchange="OnGeoLatLongChange()">
-                                <option value="N">شمالا</option>
-                                <option value="S">جنوبا</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input dir="ltr" id="GeoLat_Value" type="text" size="15" class="EditLatLonBox" onkeyup="OnGeoLatLongChange()" />&nbsp;العرض&deg;&nbsp;&nbsp;=
-                        </td>
-                        <td dir="ltr">
-                            <div id="GeoLat_Feedback" style="font-family:Monospace;"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select id="GeoLong_EW" class="PullDown" onchange="OnGeoLatLongChange()">
-                                <option value="W">غربا</option>
-                                <option value="E">شرقا</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input dir="ltr" id="GeoLong_Value" type="text" size="15" class="EditLatLonBox" onkeyup="OnGeoLatLongChange()" />&nbsp;الطول&nbsp;&deg;&nbsp;=
-                        </td>
-                        <td dir="ltr">
-                            <div id="GeoLong_Feedback" style="font-family:Monospace;"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input id="SaveButton" disabled="disabled" type="button" value="Save" title="Saves your edited coordinates and starts using them." onclick="SaveGeographicCoordinates();CalculateSolarSystem();" /></td>
-                    </tr>
-                </table>
-            </td>       <!-- end geographic coordinate column -->
-        </tr>
-    </table>    <!-- end outer table for all controls -->
-
-
-    <table>
-        <tr>
-            <td>
-                <table class="ControlBox">     <!-- date/time controls begin -->
-                    <tr>
-                        <td colspan="6">
-                            <center>
-                                <table>
-                                    <tr title="عند اختيارك تفعيل "الوقت الحقيقي" سيتم تحديث البيانات كل ثانية">
-                                        <td><input type="checkbox" id="checkbox_RealTime" onclick="OnCheckBoxRealTime()" /></td>
-                                        <td class="OptionHeader">الوقت الحقيقي - تحديث</td>
-                                    </tr>
-                                </table>
-                            </center>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><input type="text" size="4" id="edit_Year"   class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
-                        <td><input type="text" size="2" id="edit_Month"  class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
-                        <td><input type="text" size="2" id="edit_Day"    class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
-                        <td><input type="text" size="2" id="edit_Hour"   class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
-                        <td><input type="text" size="2" id="edit_Minute" class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
-                        <td><input type="text" size="2" id="edit_Second" class="EditDateBox" onkeyup="OnDateTimeDirty()" /></td>
-
-                        <td><input type="button" value="Set" id="button_SetDateTime" onclick="OnSetDateTime()" disabled="disabled" /></td>
-                    </tr>
-                    <tr class="DateTimeCaption">
-                        <td>سنة</td>
-                        <td>شهر</td>
-                        <td>يوم</td>
-                        <td>ساعة</td>
-                        <td>دقيقة</td>
-                        <td>ثانية</td>
-
-                        <td>
-                            <input type="button" value="&minus;" id="button_SubtractOneDay" onclick="AddDays(-1)" disabled="disabled" title="إنقاص 1 يوم" />
-                            <input type="button" value="+" id="button_AddOneDay" onclick="AddDays(1)" disabled="disabled" title="زيادة 1 يوم" />
-                         </td>
-                    </tr>
-                </table>    <!-- date/time controls end -->
-            </td>
-
-            <td width="30px"></td>
-
-            <td>
-                <table class="ControlBox">  <!-- angle mode options -->
-                    <tr>
-                        <td colspan="2" class="OptionHeader">طرق عرض قيم الزاوية</td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_dms" onclick="SetAngleMode('dms')" /></td>
-                        <td  class="FlatText"><span dir="ltr"> dd&deg; mm' ss&quot;</span></td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_dmm" onclick="SetAngleMode('dmm')" /></td>
-                        <td  class="FlatText"> <span dir="ltr"> dd&deg; mm.mm'</span></td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_decimal" onclick="SetAngleMode('decimal')" /></td>
-                        <td  class="FlatText">dd.ddddd</td>
-                    </tr>
-                </table>
-            </td>
-
-            <td width="30px"></td>
-
-            <td>
-                <table border="1" cellpadding="2" cellspacing="0">     <!-- extra info table: rise/set/culm/etc -->
-                    <tr>
-                        <td colspan="2" style="text-align:center;">
-                            <select id="selectBody" onchange="OnSelectBody()">
-                                <option value="Sun">الشمس</option>
-                                <option value="Moon">القمر</option>
-                                <option value="Mercury">عطارد</option>
-                                <option value="Venus">الزهرة</option>
-                                <option value="Mars">المريخ</option>
-                                <option value="Ceres">الكويكب سيريس</option>
-                                <option value="Pallas">الكويكب بالاس</option>
-                                <option value="Juno">الكويكب جونو</option>
-                                <option value="Vesta">الكويكب فستا</option>
-                                <option value="Jupiter">المشتري</option>
-                                <option value="Saturn">زحل</option>
-                                <option value="Uranus">أورانوس</option>
-                                <option value="Neptune">نبتون</option>
-                                <option value="Pluto">بلوتو</option>
-                            </select>
-                            <input type="button" value="تفاصيل ...." onclick="OnDetailsButton()" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center;">شروق</td>
-                        <td><div id="divRiseTime" class="EventTimeData"></div></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center;">عبور</td>
-                        <td><div id="divCulmTime" class="EventTimeData"></div></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center;">غروب</td>
-                        <td><div id="divSetTime" class="EventTimeData"></div></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <p>
-        <input type="checkbox" id="checkbox_BrightObjectsOnly" onclick="OnVisibilityChange()" />
-        أظهر الأجرام السماوية اللامعة بما يكفي لرؤيتها بالعين المجردة.<br/>
+<div class="solar-dashboard">
+    
+    <!-- صف الخريطة والرسم البياني -->
+    <div class="visuals-row">
+        <div class="visual-card">
+            <div class="visual-header">
+                <span>الموقع الجغرافي للراصد</span>
+                <span class="badge">اسحب العلامة أو انقر على الخريطة</span>
+            </div>
+            <div id="locationMap" style="height:280px;"></div>
+            <div style="padding:8px 12px; background:var(--stel-bg-dark); display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
+                <div class="geo-input-group">
+                    <label>العرض:</label>
+                    <input type="text" id="latInput" placeholder="33.5138" size="10" value="33.5138">
+                    <select id="latNS">
+                        <option value="N">شمال</option>
+                        <option value="S">جنوب</option>
+                    </select>
+                </div>
+                <div class="geo-input-group">
+                    <label>الطول:</label>
+                    <input type="text" id="lngInput" placeholder="36.2765" size="10" value="36.2765">
+                    <select id="lngEW">
+                        <option value="E">شرق</option>
+                        <option value="W">غرب</option>
+                    </select>
+                </div>
+                <button id="syncGeoBtn">تحديد من الخريطة</button>
+            </div>
+        </div>
         
-        <input type="checkbox" id="checkbox_RisenObjectsOnly" onclick="OnVisibilityChange()" />
-        أظهر الأجرام السماوية الظاهرة فوق الأفق.</br>
-        
-        <input type="checkbox" id="checkbox_ShowComets" onclick="OnVisibilityChange()" />
-        إظهار المذنبات.<br/>
-        
-        <input type="checkbox" id="checkbox_ShowMinor" onclick="OnVisibilityChange()" />
-        إظهار الكويكبات الصغيرة.<br/>
-    </p>
-</form>
+        <div class="visual-card">
+            <div class="visual-header">
+                <span>الرسم ثنائي الأبعاد <span id="orbitModeLabel">(مركزه الشمس)</span></span>
+                <span class="badge">تمرير العجلة للتكبير</span>
+            </div>
+            <canvas id="solarCanvas" width="600" height="280" style="width:100%; height:auto; background:var(--canvas-bg);"></canvas>
+						<div id="threeContainer" style="display:none; width:100%; height:280px; background:var(--canvas-bg);"></div>
 
-<div dir="ltr" id="divDateTime"></div>
-
-<table dir="ltr" id="planetTable" border="1" cellpadding="2" cellspacing="0">
-    <tr>
-        <th class="TableHeader" style="width: 8em;" title="أسماء الأجرام اللامعة غامقة. و أسماء الأجرام الأخفت - غير مرئية بالعين المجردة - فضية اللون.">الجرم السماوي</th>
-        <th id="th_x">x</th>
-        <th id="th_y">y</th>
-        <th id="th_z">z</th>
-        <th id="th_distance" class="TableHeader" title="بعد الجرم السماوي عن مركز الأرض (وضعية geocentric)  أو عن مركز الشمس the Sun (وضعية  heliocentric), مقدرة بالواحدة الفلكية  AU.">المسافة&nbsp;<br/><a href="http://en.wikipedia.org/wiki/Astronomical_units" target="_blank"> AU</a></th>
-        <th class="TableHeader" title="اللمعان الظاهري المرئي">القدر الظاهري</th>
-        <th class="TableHeader" title="الاستطالة: هي الزاوية بين الجرم السماوي و الشمس لدى النظر إليهما من الأرض. ">
-    الاستطالة
-    </th>
-        <th class="TableHeader" title="Constellation">الكوكبة</th>
-        <th class="TableHeader" id="th_Angle1"></th>
-        <th class="TableHeader" id="th_Angle2"></th>
-    </tr>
-</table>
-<p></p>
-<hr />
-
-<div>
-<input type="button" class="button" onclick="return toggleMe('para1')" value=" ملاحظات Don Bross">
+<div class="canvas-toolbar">
+    <button id="zoomInBtn">🔍 تكبير</button>
+    <button id="zoomOutBtn">🔍 تصغير</button>
+    <button id="resetZoomBtn">⟳ إعادة ضبط</button>
+    <button id="toggleViewBtn" style="background: linear-gradient(#5D5F62, #3A3C3E); border: 1px solid #2A2C2E; color: #fff; padding: 5px 12px; border-radius: 3px; cursor: pointer;">🌍 عرض 3D</button>
 </div>
-<div id="para1" style="display:none">
-<p>
+        </div>
+    </div>
+    
+    <!-- لوحة التحكم الرئيسية -->
+    <div class="controls-grid">
+        <!-- نظام الإحداثيات المتعامدة -->
+        <div class="control-card">
+            <h4>نظام إحداثيات متعامدة</h4>
+            <div class="radio-group">
+                <label><input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_Heliocentric" onclick="OnRadioButton_Cartesian(this.id)"> مركزه الشمس (Heliocentric)</label>
+                <label><input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_Geocentric" onclick="OnRadioButton_Cartesian(this.id)"> مركزه الأرض (Geocentric)</label>
+                <label><input type="radio" name="rbGroup_Cartesian" id="rb_Cartesian_None" onclick="OnRadioButton_Cartesian(this.id)"> إخفاء</label>
+            </div>
+        </div>
+        
+        <!-- إحداثيات زاوية -->
+        <div class="control-card">
+            <h4>إحداثيات زاوية</h4>
+            <div class="radio-group">
+                <label><input type="radio" name="rbGroup_Angular" id="rb_Angular_Ecliptic" onclick="OnRadioButton_Angular(this.id)"> بروجية (Ecliptic)</label>
+                <label><input type="radio" name="rbGroup_Angular" id="rb_Angular_Equatorial" onclick="OnRadioButton_Angular(this.id)"> استوائية (Equatorial)</label>
+                <label><input type="radio" name="rbGroup_Angular" id="rb_Angular_Horizontal" onclick="OnRadioButton_Angular(this.id)"> سمتية (Horizontal)</label>
+            </div>
+        </div>
+        
+        <!-- الوقت والتاريخ -->
+        <div class="control-card">
+            <h4>التاريخ والوقت</h4>
+            <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><input type="checkbox" id="checkbox_RealTime" onclick="OnCheckBoxRealTime()"> الوقت الحقيقي (تحديث كل ثانية)</label>
+            <div class="date-time-row">
+                <input type="text" size="4" id="edit_Year" placeholder="سنة"> <span>/</span>
+                <input type="text" size="2" id="edit_Month" placeholder="شهر"> <span>/</span>
+                <input type="text" size="2" id="edit_Day" placeholder="يوم">
+                <input type="text" size="2" id="edit_Hour" placeholder="ساعة"> <span>:</span>
+                <input type="text" size="2" id="edit_Minute" placeholder="دقيقة"> <span>:</span>
+                <input type="text" size="2" id="edit_Second" placeholder="ثانية">
+                <button id="button_SetDateTime" onclick="OnSetDateTime()" disabled>تعيين</button>
+            </div>
+            <div style="display:flex; gap:6px;">
+                <button id="button_SubtractOneDay" onclick="AddDays(-1)" disabled>− يوم</button>
+                <button id="button_AddOneDay" onclick="AddDays(1)" disabled>+ يوم</button>
+            </div>
+        </div>
+        
+        <!-- الموقع الجغرافي -->
+        <div class="control-card">
+            <h4>موقع الراصد</h4>
+            <div class="geo-input-group">
+                <select id="GeoLat_NS" onchange="OnGeoLatLongChange()"><option value="N">شمالاً</option><option value="S">جنوباً</option></select>
+                <input dir="ltr" id="GeoLat_Value" type="text" size="12" class="EditLatLonBox" onkeyup="OnGeoLatLongChange()" placeholder="خط العرض">
+                <div id="GeoLat_Feedback" style="font-size:10px;"></div>
+            </div>
+            <div class="geo-input-group">
+                <select id="GeoLong_EW" onchange="OnGeoLatLongChange()"><option value="W">غرباً</option><option value="E">شرقاً</option></select>
+                <input dir="ltr" id="GeoLong_Value" type="text" size="12" class="EditLatLonBox" onkeyup="OnGeoLatLongChange()" placeholder="خط الطول">
+                <div id="GeoLong_Feedback" style="font-size:10px;"></div>
+            </div>
+            <button id="SaveButton" disabled onclick="SaveGeographicCoordinates();CalculateSolarSystem();">حفظ</button>
+        </div>
+    </div>
+    
+    <!-- شريط الفلاتر -->
+    <div class="filter-bar">
+        <div style="display: flex; gap: 12px;">
+            <span style="font-size:11px;">طرق عرض الزاوية:</span>
+            <label><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_dms" onclick="SetAngleMode('dms')"> dd° mm' ss"</label>
+            <label><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_dmm" onclick="SetAngleMode('dmm')"> dd° mm.mm'</label>
+            <label><input type="radio" name="rbGroup_AngleMode" id="rb_AngleMode_decimal" onclick="SetAngleMode('decimal')"> dd.ddddd</label>
+        </div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="checkbox_BrightObjectsOnly" onclick="OnVisibilityChange()"> أظهر الأجرام اللامعة فقط</label>
+            <label><input type="checkbox" id="checkbox_RisenObjectsOnly" onclick="OnVisibilityChange()"> أظهر الأجرام فوق الأفق فقط</label>
+            <label><input type="checkbox" id="checkbox_ShowComets" onclick="OnVisibilityChange()"> إظهار المذنبات</label>
+            <label><input type="checkbox" id="checkbox_ShowMinor" onclick="OnVisibilityChange()"> إظهار الكويكبات الصغيرة</label>
+        </div>
+    </div>
+    
+    <!-- الجدول الديناميكي -->
+    <div class="table-wrapper">
+        <table id="planetTable" border="1" cellpadding="2" cellspacing="0">
+            <thead>
+                <tr><th class="TableHeader">الجرم السماوي</th><th id="th_x">x</th><th id="th_y">y</th><th id="th_z">z</th><th id="th_distance">المسافة (AU)</th><th>القدر</th><th>الاستطالة</th><th>الكوكبة</th><th id="th_Angle1"></th><th id="th_Angle2"></th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    
+    <div id="divDateTime"></div>
+    
+    <!-- منطقة المعلومات -->
+    <div class="info-footer">
+        <div class="rise-set-panel">
+            <select id="selectBody" onchange="OnSelectBody()">
+                <option value="Sun">الشمس</option><option value="Moon">القمر</option><option value="Mercury">عطارد</option><option value="Venus">الزهرة</option>
+                <option value="Mars">المريخ</option><option value="Ceres">سيريس</option><option value="Pallas">بالاس</option><option value="Juno">جونو</option>
+                <option value="Vesta">فستا</option><option value="Jupiter">المشتري</option><option value="Saturn">زحل</option><option value="Uranus">أورانوس</option>
+                <option value="Neptune">نبتون</option><option value="Pluto">بلوتو</option>
+            </select>
+            <button onclick="OnDetailsButton()">تفاصيل الرسم البياني</button>
+            <div class="event-data">
+                <div>شروق: <span id="divRiseTime">--</span></div>
+                <div>عبور: <span id="divCulmTime">--</span></div>
+                <div>غروب: <span id="divSetTime">--</span></div>
+            </div>
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleMe('para1')">ملاحظات Don Cross</div>
+                <div id="para1" class="collapsible-content" dir="ltr"><p>
     This is a demo page for my Javascript astronomy engine, <a href="astronomy.js" type="text/plain">astronomy.js</a>.
     The algorithms here are based on formulas mostly from <a href="http://www.stjarnhimlen.se/">Paul Schlyter's</a>
     web page
@@ -340,26 +419,32 @@ function toggleMe(a){
     <b>If you need really accurate data</b> for a planet or asteroid, try the 
     <a href="../external.html?link=http://ssd.jpl.nasa.gov/?horizons">JPL HORIZONS System</a>.
     (These guys were navigating spacecraft through the solar system when I was still playing with GI Joe!)
-</p>
-</div>
-
-<div>
-<input type="button" class="button" onclick="return toggleMe('para2')" value=" Other useful astronomy calculation resources: ">
-</div>
-<div id="para2" style="display:none">
-
-<p>
+</p></div>
+            </div>
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleMe('para2')">مصادر مفيدة</div>
+                <div id="para2" class="collapsible-content" dir="ltr">
+								<p><ul>
+									<li><a href="../external.html?link=http://www.stargazing.net/kepler/">Approximate astronomical positions</a> - by <a href="../external.html?link=http://www.stargazing.net/kepler/kpb.html">Keith Burnett</a>.</li>
+								</ul></p>
+							</div>
+            </div>
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleMe('para3')">تاريخ التحديثات</div>
+                <div id="para3" class="collapsible-content" style="font-size:9px;">
 <ul>
-    <li><a href="../external.html?link=http://www.stargazing.net/kepler/">Approximate astronomical positions</a> - by <a href="../external.html?link=http://www.stargazing.net/kepler/kpb.html">Keith Burnett</a>.</li>
-</ul>
-</p>
-</div>
-<div>
-<input type="button" class="button" onclick="return toggleMe('para3')" value=" تاريخ التحديثات والتغييرات في الصفحة : ">
-</div>
-<div id="para3" style="display:none">
-<ul dir="ltr">
+<li dir="rtl">
+    <strong>تاريخ التحديث: 16/06/2026</strong> – قام <strong>قتيبة أقرع</strong> بتطوير شامل للصفحة، تضمن التغييرات الرئيسية التالية:
+    <ul>
+        <li><strong>ملف خريطة تفاعلية جديد (<code>map.js</code>)</strong>: دمج مكتبة Leaflet لإتاحة اختيار الموقع الجغرافي بالنقر أو سحب العلامة على الخريطة، مع مزامنة فورية مع حقول خط الطول والعرض.</li>
+        <li><strong>ملف رسم ثنائي الأبعاد جديد (<code>orbit.js</code>)</strong>: عرض الكواكب في نظام إحداثي متعامد (x، y) مع شبكة من الخطوط الأفقية والشاقولية مرقمة بوحدة <strong>AU</strong>، ودوائر المدارات حول الشمس مع دعم الإزاحة في الوضع الأرضي (geocentric)، وإصلاح ظهور الأرض في الوضع الشمسي، وإضافة التحكم بالتكبير/التصغير.</li>
+        <li><strong>ملف عرض ثلاثي الأبعاد جديد (<code>orbit3d.js</code>)</strong>: إنشاء مشهد <strong>Three.js</strong> متكامل يعرض الكواكب والمدارات في فضاء ثلاثي الأبعاد مع إضاءة ونجوم خلفية، وإضافة زر للتبديل بين العرض الثنائي والثلاثي الأبعاد مع تحديث فوري للإحداثيات.</li>
+        <li><strong>استبدال الستايل القديم (<code>solar.css</code>) بنظام ألوان جديد</strong>: اعتماد متغيرات CSS لخلفيات داكنة، وألوان نصوص، واستبدال الأصفر الفاقع بالبيج الدافئ، وإعادة تصميم الواجهة لتكون أكثر حداثة وسهولة مع دعم الشاشات المختلفة (responsive).</li>
+        <li><strong>إصلاحات أساسية</strong>: تعديل دالة <code>HilightColors</code> لحل مشكلة توقف التحديث التلقائي للجداول والوقت، وتحسين استقرار التحديث وربط جميع المكونات (الجدول، الرسم ثنائي الأبعاد، الرسم ثلاثي الأبعاد، الخريطة) بشكل سلس مع دعم الكوكيز لحفظ التفضيلات، وترجمة جميع التعليقات والرسائل إلى العربية.</li>
+    </ul>
+</li>
 	<li dir="rtl">تم ترجمة الصفحة بتاريخ 17/09/2016 من قبل قتيبة أقرع بتصرف ،إذ تم إحداث تغيير في بنية الصفحة بشكل بسيط و إعادة ترتيب ملفات js و css.</li>
+<ul dir="ltr">	
 <li> $Log: solar_system.html,v $
     Revision 1.49  2009/10/26 15:29:51  Don.Cross
     Steve Carlson pointed out to me that the distance displayed for each planet is the distance from the Earth,
@@ -559,9 +644,253 @@ function toggleMe(a){
 
 </li>
 </ul>
+</ul>
 </div>
-<p id="copyright">ترجمة و إعداد : <a href="https://sites.google.com/site/interactiveastronomy">قتيبة أقرع</a></p>
-</body>
+            </div>
+            <div style="text-align:center; font-size:10px;">ترجمة وتطوير الواجهة: قتيبة أقرع (2026)</div>
+        </div>
+    </div>
+</div>
 
-<!-- Mirrored from cosinekitty.com/solar_system.html by HTTrack Website Copier/3.x [XR&CO'2013], Sat, 17 Sep 2016 04:34:17 GMT -->
+<script>
+    // ========================================================================
+    // ربط الخريطة مع حقول الموقع الأصلية (GeoLat_Value, GeoLong_Value)
+    // ========================================================================
+    function syncMapToAstro() {
+        var lat = parseFloat(document.getElementById('latInput').value);
+        var lng = parseFloat(document.getElementById('lngInput').value);
+        if (isNaN(lat)) lat = 33.5138;
+        if (isNaN(lng)) lng = 36.2765;
+        var ns = document.getElementById('latNS').value;
+        var ew = document.getElementById('lngEW').value;
+        var finalLat = (ns === 'S') ? -Math.abs(lat) : Math.abs(lat);
+        var finalLng = (ew === 'W') ? -Math.abs(lng) : Math.abs(lng);
+        
+        document.getElementById('GeoLat_Value').value = Math.abs(finalLat).toFixed(5);
+        document.getElementById('GeoLat_NS').value = finalLat >= 0 ? 'N' : 'S';
+        document.getElementById('GeoLong_Value').value = Math.abs(finalLng).toFixed(5);
+        document.getElementById('GeoLong_EW').value = finalLng >= 0 ? 'E' : 'W';
+        
+        if (typeof OnGeoLatLongChange === 'function') OnGeoLatLongChange();
+        if (typeof CommitGeographicCoordinates === 'function') CommitGeographicCoordinates();
+        if (typeof CalculateSolarSystem === 'function') CalculateSolarSystem();
+    }
+    
+    function updateMapFromCoords() {
+        var lat = parseFloat(document.getElementById('GeoLat_Value').value);
+        var ns = document.getElementById('GeoLat_NS').value;
+        var lng = parseFloat(document.getElementById('GeoLong_Value').value);
+        var ew = document.getElementById('GeoLong_EW').value;
+        if (!isNaN(lat) && !isNaN(lng)) {
+            var absLat = (ns === 'S') ? -lat : lat;
+            var absLng = (ew === 'W') ? -lng : lng;
+            document.getElementById('latInput').value = Math.abs(absLat).toFixed(6);
+            document.getElementById('lngInput').value = Math.abs(absLng).toFixed(6);
+            document.getElementById('latNS').value = absLat >= 0 ? 'N' : 'S';
+            document.getElementById('lngEW').value = absLng >= 0 ? 'E' : 'W';
+            if (typeof window.updateMapMarker === 'function') window.updateMapMarker(absLat, absLng);
+        }
+    }
+    
+    // تمديد OnGeoLatLongChange ليشمل تحديث الخريطة والحسابات
+    var origOnGeoLatLongChange = window.OnGeoLatLongChange;
+    window.OnGeoLatLongChange = function() {
+        if (origOnGeoLatLongChange) origOnGeoLatLongChange();
+        updateMapFromCoords();
+        if (typeof CalculateSolarSystem === 'function') CalculateSolarSystem();
+    };
+    
+    // ربط أحداث حقول الخريطة بالتحديث المباشر
+    function bindMapInputEvents() {
+        var latInput = document.getElementById('latInput');
+        var lngInput = document.getElementById('lngInput');
+        var latNS = document.getElementById('latNS');
+        var lngEW = document.getElementById('lngEW');
+        var updateFunc = function() {
+            if (typeof onLocationChange === 'function') onLocationChange();
+        };
+        if (latInput) latInput.addEventListener('change', updateFunc);
+        if (lngInput) lngInput.addEventListener('change', updateFunc);
+        if (latNS) latNS.addEventListener('change', updateFunc);
+        if (lngEW) lngEW.addEventListener('change', updateFunc);
+    }
+    
+    // ربط أزرار التكبير/التصغير
+    function bindZoomButtons() {
+        var zoomIn = document.getElementById('zoomInBtn');
+        var zoomOut = document.getElementById('zoomOutBtn');
+        var resetZoom = document.getElementById('resetZoomBtn');
+        if (zoomIn) zoomIn.onclick = function() { if (window.zoomIn) window.zoomIn(); setTimeout(UpdateOrbitVisuals, 50); };
+        if (zoomOut) zoomOut.onclick = function() { if (window.zoomOut) window.zoomOut(); setTimeout(UpdateOrbitVisuals, 50); };
+        if (resetZoom) resetZoom.onclick = function() { if (window.resetZoom) window.resetZoom(); setTimeout(UpdateOrbitVisuals, 50); };
+    }
+    
+    // تحديث الرسم ثنائي الأبعاد بناءً على الوضع الحالي
+		window.UpdateOrbitVisuals = function() {
+				if (typeof updatePlanetsPositions3D === 'function') updatePlanetsPositions3D();
+				if (!window.Astronomy || !window.GeographicLatitude || !window.CartesianCoordinateType) return;
+				if (typeof window.planetScreenPos === 'undefined') window.planetScreenPos = {};
+				if (typeof window.redrawCanvas !== 'function') return;
+				
+				var day = Astronomy.DayValue(AstroDateTime);
+				var mode = CartesianCoordinateType;
+				var isHelio = (mode === 'heliocentric');
+				var canvas = document.getElementById('solarCanvas');
+				if (!canvas) return;
+				
+				var centerX = canvas.width / 2;
+				var centerY = canvas.height / 2;
+				var maxDist = isHelio ? (window.maxDistHelio || 45) : (window.maxDistGeo || 2.5);
+				var dynamicMaxDist = maxDist / (window.zoomLevel || 1);
+				var scale = Math.min(centerX / dynamicMaxDist, centerY / dynamicMaxDist);
+				
+				window.planetScreenPos = {};
+				var sunPos_px = null;
+				
+				for (var i = 0; i < Astronomy.Body.length; i++) {
+						var p = Astronomy.Body[i];
+					 // if (isHelio && (p.Name === 'Sun' || p.Name === 'Earth')) continue;
+					 if (isHelio && p.Name === 'Sun') continue;   // نستبعد الشمس فقط
+		// الأرض في الوضع helio يتم حسابها كأي كوكب آخر
+						if (!isHelio && p.Name === 'Earth') continue;
+						
+						var pos;
+						if (isHelio) {
+								if (p.Name === 'Moon') continue;
+								pos = p.EclipticCartesianCoordinates(day);
+						} else {
+								pos = p.GeocentricCoordinates(day);
+						}
+						
+						if (pos) {
+								var screenX = centerX + pos.x * scale;
+								var screenY = centerY + pos.y * scale;
+								if (screenX > -50 && screenX < canvas.width + 50 && screenY > -50 && screenY < canvas.height + 50) {
+										window.planetScreenPos[p.Name] = { x: screenX, y: screenY };
+										if (!isHelio && p.Name === 'Sun') {
+												sunPos_px = { x: screenX, y: screenY };
+										}
+								}
+						}
+				}
+				
+				// إبلاغ orbit.js بموقع الشمس في الوضع geocentric
+				if (!isHelio && sunPos_px && typeof window.setSunScreenPosition === 'function') {
+						window.setSunScreenPosition(sunPos_px.x, sunPos_px.y);
+				} else if (isHelio && typeof window.setSunScreenPosition === 'function') {
+						window.setSunScreenPosition(centerX, centerY); // الشمس ثابتة في المركز
+				}
+				
+				if (typeof window.redrawCanvas === 'function') window.redrawCanvas();
+						// تحديث العرض الثلاثي الأبعاد فقط إذا كان مفعلاً والمشهد مهيأ
+				if (typeof is3DMode !== 'undefined' && is3DMode && typeof updatePlanetsPositions3D === 'function') {
+						updatePlanetsPositions3D();
+				}
+		};
+    
+    // تمديد CalculateSolarSystem (موجود بالفعل في calculate.js، لكن نضيفه هنا احتياطيًا)
+    var origCalculate = window.CalculateSolarSystem;
+    window.CalculateSolarSystem = function() {
+        if (origCalculate) origCalculate();
+        setTimeout(function() {
+            if (typeof UpdateOrbitVisuals === 'function') UpdateOrbitVisuals();
+            var modeLabelSpan = document.getElementById('orbitModeLabel');
+            if (modeLabelSpan) {
+                var label = (CartesianCoordinateType === 'heliocentric') ? '(مركزه الشمس)' : (CartesianCoordinateType === 'geocentric' ? '(مركزه الأرض)' : 'مخفي');
+                modeLabelSpan.innerText = label;
+            }
+            if (typeof window.updateOrbitMode === 'function') window.updateOrbitMode(CartesianCoordinateType === 'heliocentric' ? 'helio' : 'geo');
+        }, 50);
+    };
+    
+    // تمديد OnRadioButton_Cartesian
+    var origCart = window.OnRadioButton_Cartesian;
+    window.OnRadioButton_Cartesian = function(id) {
+        if (origCart) origCart(id);
+        setTimeout(function() {
+            if (typeof UpdateOrbitVisuals === 'function') UpdateOrbitVisuals();
+        }, 100);
+    };
+    
+    // دوال مساعدة
+    window.toggleMe = function(a) {
+        var e = document.getElementById(a);
+        if (e) e.style.display = (e.style.display === "none" || e.style.display === "") ? "block" : "none";
+    };
+    
+    // تهيئة الصفحة بعد تحميل كل شيء
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            if (typeof window.initMap === 'function') {
+                window.initMap();
+                setTimeout(function() {
+                    updateMapFromCoords();
+                    if (typeof CommitGeographicCoordinates === 'function') CommitGeographicCoordinates();
+                    if (typeof CalculateSolarSystem === 'function') CalculateSolarSystem();
+                }, 200);
+            }
+            if (typeof window.initCanvas === 'function') {
+                window.initCanvas();
+                // تحديث دوري احتياطي كل 5 ثوانٍ
+                setInterval(function() {
+                    if (typeof UpdateOrbitVisuals === 'function') UpdateOrbitVisuals();
+                }, 5000);
+            }
+            bindMapInputEvents();
+            bindZoomButtons();
+            document.getElementById('syncGeoBtn')?.addEventListener('click', syncMapToAstro);
+        }, 100);
+    });
+		// ============================================================
+		// زر التبديل بين العرض الثنائي والثلاثي الأبعاد (نسخة آمنة)
+		// ============================================================
+		var is3DMode = false;
+		var threeContainer = document.getElementById('threeContainer');
+		var solarCanvas = document.getElementById('solarCanvas');
+		var toggleBtn = document.getElementById('toggleViewBtn');
+
+		if (toggleBtn) {
+				toggleBtn.addEventListener('click', function() {
+						is3DMode = !is3DMode;
+						
+if (is3DMode) {
+    solarCanvas.style.display = 'none';
+    threeContainer.style.display = 'block';
+    toggleBtn.innerHTML = '🔄 عرض 2D';
+    toggleBtn.style.background = 'linear-gradient(#A6E39E, #4CAF50)';
+    
+    if (typeof init3D === 'function') {
+        if (!window._threeInitialized) {
+            init3D('threeContainer');
+            window._threeInitialized = true;
+        } else {
+            if (typeof resizeRenderer3D === 'function') {
+                setTimeout(resizeRenderer3D, 100);
+            }
+        }
+        if (typeof updatePlanetsPositions3D === 'function') {
+            updatePlanetsPositions3D();
+        }
+    }
+}else {
+								// التبديل إلى العرض الثنائي الأبعاد
+								solarCanvas.style.display = 'block';
+								threeContainer.style.display = 'none';
+								toggleBtn.innerHTML = '🌍 عرض 3D';
+								toggleBtn.style.background = '';
+								// إعادة رسم اللوحة ثنائية الأبعاد لتحديثها
+								if (typeof redrawCanvas === 'function') {
+										redrawCanvas();
+								}
+						}
+				});
+		}
+		window.addEventListener('resize', function() {
+    if (is3DMode && typeof resizeRenderer3D === 'function') {
+        resizeRenderer3D();
+    }
+});
+   console.log("تم تحميل الواجهة بالكامل مع ربط جميع المكونات");
+</script>
+</body>
 </html>

@@ -14,12 +14,10 @@ function HtmlRightAscension (ra, mode)
     
     switch (mode) {
         case "dms":
-            // 23<sup>h</sup>14<sup>m</sup>16<sup>s</sup>
             var dms = Angle.DMS (ra);
             if (dms.negative) {
                 throw "Encountered negative right ascension!  " + ra;
             }
-            
             var hours   = (dms.degrees < 10 ? "0" : "") + dms.degrees.toString();
             var minutes = (dms.minutes < 10 ? "0" : "") + dms.minutes.toString();
             var seconds = (dms.seconds < 10 ? "0" : "") + dms.seconds.toFixed(1);
@@ -27,12 +25,10 @@ function HtmlRightAscension (ra, mode)
             return s;
             
         case "dmm":
-            // 23<sup>h</sup>14.27<sup>m</sup>
             var dms = Angle.DMM (ra);
             if (dms.negative) {
                 throw "Encountered negative right ascension!  " + ra;
             }
-
             var hours   = (dms.degrees < 10 ? "0" : "") + dms.degrees.toString();
             var minutes = (dms.minutes < 10 ? "0" : "") + dms.minutes.toFixed(2);            
             var s = hours + "<sup class='UnitSup'>h</sup>&nbsp;" + minutes + "<sup class='UnitSup'>m</sup>";
@@ -56,11 +52,9 @@ function HtmlDeclination (dec, mode)
         case "dms":
             var dms = Angle.DMS (dec);
             var s = dms.negative ? "&minus;" : "&nbsp;";
-            
             if (dms.degrees < 100) {
                 s += "0";
             }
-            
             var hours   = (dms.degrees < 10 ? "0" : "") + dms.degrees.toString();
             var minutes = (dms.minutes < 10 ? "0" : "") + dms.minutes.toString();
             var seconds = (dms.seconds < 10 ? "0" : "") + dms.seconds.toFixed(1);
@@ -70,11 +64,9 @@ function HtmlDeclination (dec, mode)
         case "dmm":
             var dms = Angle.DMM (dec);
             var s = dms.negative ? "&minus;" : "&nbsp;";
-            
             if (dms.degrees < 100) {
                 s += "0";
             }
-            
             var hours   = (dms.degrees < 10 ? "0" : "") + dms.degrees.toString();
             var minutes = (dms.minutes < 10 ? "0" : "") + dms.minutes.toFixed(2);
             s += hours + "&deg;&nbsp;" + minutes + "'&nbsp;";
@@ -103,126 +95,109 @@ function ShowAngleFeedback (divName, value, editName)
 {
     var isDMS = ($(editName).value.indexOf(":") >= 0);
     var feedback;
-    
     if (isDMS) {
-        // user entered dd:mm:ss, so show feedback in pure decimal
         feedback = HtmlDeclination (value, "decimal");
     } else {
-        // user entered pure decimal, so show feedback in dd:mm:ss
         feedback = HtmlDeclination (value, "dms");
     }
-    
     $(divName).innerHTML = '&nbsp;&nbsp;' + feedback;        
 }
 
 function CommitGeographicCoordinates()
 {
-    var lat = ParseAngle ($('GeoLat_Value').value);
-    var lon = ParseAngle ($('GeoLong_Value').value);
+    // إصلاح: تمرير max = 90 لخط العرض، 180 لخط الطول
+    var lat = ParseAngle ($('GeoLat_Value').value, 90);
+    var lon = ParseAngle ($('GeoLong_Value').value, 180);
 
     if (lat == null) {
-        alert ("The geographic latitude you have entered is not valid. It must be between 0 and 90 d egrees.  You may enter it with a decimal fraction, or in ddd:mm:ss notation.");
+        alert ("خط العرض الذي أدخلته غير صحيح. يجب أن يكون بين 0 و 90 درجة. يمكنك إدخاله بصيغة عشرية أو بصيغة dd:mm:ss.");
         $('GeoLat_Value').focus();
+        return false;
     }
     
     if (lon == null) {
-        alert ("The geographic longitude you have entered is not valid. It must be between 0 and 180 degrees.  You may enter it with a decimal fraction, or in dd:mm:ss notation.");
+        alert ("خط الطول الذي أدخلته غير صحيح. يجب أن يكون بين 0 و 180 درجة. يمكنك إدخاله بصيغة عشرية أو بصيغة dd:mm:ss.");
         $('GeoLong_Value').focus();
+        return false;
     }
     
-    if ((lat != null) && (lon != null)) {
-        if ($('GeoLat_NS').selectedIndex == 1) {
-            lat *= -1.0;
-        }
-        
-        if ($('GeoLong_EW').selectedIndex == 0) {
-            lon *= -1.0;
-        }            
-    
-        GeographicLatitude = lat;
-        GeographicLongitude = lon;
-        ShowAngleFeedback ('GeoLat_Feedback',  lat, 'GeoLat_Value');
-        ShowAngleFeedback ('GeoLong_Feedback', lon, 'GeoLong_Value');
-        return true;    // valid
-    } else {
-        return false;   // not valid
+    if ($('GeoLat_NS').selectedIndex == 1) {
+        lat *= -1.0;
     }
+    
+    if ($('GeoLong_EW').selectedIndex == 0) {
+        lon *= -1.0;
+    }            
+
+    GeographicLatitude = lat;
+    GeographicLongitude = lon;
+    ShowAngleFeedback ('GeoLat_Feedback',  lat, 'GeoLat_Value');
+    ShowAngleFeedback ('GeoLong_Feedback', lon, 'GeoLong_Value');
+    return true;
 }
 
 function SaveGeographicCoordinates()
 {
     if (CommitGeographicCoordinates()) {
-        var expiration = 3650;  // 10 years
-    
+        var expiration = 3650;
         WriteCookie ("GeographicLatitudeValue",  $('GeoLat_Value').value,  expiration);
         WriteCookie ("GeographicLongitudeValue", $('GeoLong_Value').value, expiration);
-        
         WriteCookie ("GeographicLatitudeDirection",  (($('GeoLat_NS') .selectedIndex == 0) ? "N" : "S"), expiration);
         WriteCookie ("GeographicLongitudeDirection", (($('GeoLong_EW').selectedIndex == 0) ? "W" : "E"), expiration);
-        
         $('SaveButton').disabled = true;
     }
 }
-// قمت باختيار قيم إحداثيات مدينة دمشق
+
 function LoadGeographicCoordinates()
 {
-    $('GeoLat_Value').value  = ReadCookie ("GeographicLatitudeValue",  "33.3593653");
-    $('GeoLong_Value').value = ReadCookie ("GeographicLongitudeValue", "36.2039702");
-    
+    // استخدام إحداثيات مدينة حلب كقيم افتراضية صحيحة
+    $('GeoLat_Value').value  = ReadCookie ("GeographicLatitudeValue",  "36.189100");
+    $('GeoLong_Value').value = ReadCookie ("GeographicLongitudeValue", "37.134990");
     $('GeoLat_NS').selectedIndex  = ReadCookie("GeographicLatitudeDirection","N")  == "N" ? 0 : 1;
     $('GeoLong_EW').selectedIndex = ReadCookie("GeographicLongitudeDirection","E") == "E" ? 1 : 0;
-    
     CommitGeographicCoordinates();
 }
-
 
 function OnGeoLatLongChange()
 {
     $('SaveButton').disabled = false;
 }
 
-
 function ParseAngle (s, max)
 {
-    // Look for 1..3 floating pointer numbers, delimited by colons.
-    // For example:  37.35   or   43:15.373   or  23:44:55.7  
-    // These represent degrees[:minutes[:seconds]].
-    // We ignore any white space outside the floating point numbers.
-    var angle = null;
+    // max يجب أن يكون رقمًا موجبًا (90 لخط العرض، 180 لخط الطول)
+    if (typeof max !== 'number' || max <= 0) {
+        console.error("ParseAngle: invalid max value", max);
+        return null;
+    }
     var array = s.split(/\s*:\s*/);
     if (array.length >= 1 && array.length <= 3) {
         var denom = 1.0;
-        angle = 0.0;
+        var angle = 0.0;
         for (var i=0; i < array.length; ++i) {
             if (!RegExp_Float.test(array[i])) {
-                return null;    // does not look like a valid floating point number
+                return null;
             }
-            
             var x = parseFloat (array[i]);
             if (isNaN(x)) {
-                return null;    // could not parse a floating point number
+                return null;
             }
-            
             if (x < 0) {
-                return null;    // user must specify direction by using E/W, N/S controls, not '+' or '-'.
+                return null;
             }
-            if (i > 0) {
-                if (x >= 60.0) {
-                    return null;    // not a valid minute or second value
-                }
+            if (i > 0 && x >= 60.0) {
+                return null;
             }
-            
             angle += x / denom;
             denom *= 60.0;
         }
-        
         if (angle < 0.0 || angle > max) {
             return null;
         }
+        return angle;
     }
-    return angle;
+    return null;
 }
-
 
 /*
     $Log: astro_helper.js,v $
