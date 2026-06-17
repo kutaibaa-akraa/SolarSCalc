@@ -1,4 +1,4 @@
-## حاسبة المجموعة الشمسية - محاكاة ثنائية وثلاثية الأبعاد
+## [حاسبة المجموعة الشمسية - محاكاة ثنائية وثلاثية الأبعاد] (https://kutaibaa-akraa.github.io/SolarSCalc/solar_system.html) 
 
 **Solar System Calculator - 2D & 3D Simulation**
 
