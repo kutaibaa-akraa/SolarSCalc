@@ -62,7 +62,7 @@
 
 1.  **قم بتحميل أو استنساخ المستودع**:
     ```bash
-    git clone https://github.com/kutaibaa-akraa/SolarSystemCalculator.git
+    git clone https://github.com/kutaibaa-akraa/SolarSCalc.git
     ```
 2.  **افتح الملف الرئيسي**:
     - انتقل إلى مجلد المشروع.
@@ -91,7 +91,7 @@
 هذا المشروع مرخص بموجب **رخصة GNU General Public License v2.0**.
 يمكنك استخدامه، تعديله، وتوزيعه بحرية مع الالتزام بشروط الرخصة.
 
-راجع ملف [LICENSE](LICENSE) (إن وجد) أو اقرأ نص الرخصة على [GNU.org](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+راجع ملف [LICENSE](LICENSE) الرخصة على [GNU.org](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 ---
 
@@ -109,13 +109,6 @@
 
 - **الترجمة الأولية وإعادة الهيكلة**: 17 سبتمبر 2016
 - **التطوير الشامل والإصدار الحالي**: 16 يونيو 2026
-
----
-
-## شكر وتقدير
-
-- **Paul Schlyter** – على معادلاته المفتوحة لحساب مواقع الكواكب.
-- **مجتمع Three.js و Leaflet** – على المكتبات الرائعة مفتوحة المصدر.
 
 ---
 
