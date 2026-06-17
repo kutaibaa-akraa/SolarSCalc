@@ -258,6 +258,20 @@
     </style>
 </head>
 <body onload="InitPage()">
+<!-- ====== العنوان الرئيسي (بدون أيقونات أو إيموجيات) ====== -->
+<div style="text-align: center; margin: 15px 0 5px 0;">
+    <h1 style="font-family: Arial, Sans-Serif; font-size: 28px; font-weight: bold; color: var(--stel-accent, #d4b896); margin: 0; letter-spacing: 1px;">
+        حاسبة المجموعة الشمسية - محاكاة ثنائية وثلاثية الأبعاد
+    </h1>
+    <div style="font-family: Arial, Sans-Serif; font-size: 13px; color: var(--stel-text-muted, #888); margin-top: 5px;">
+        <span>المطور الأصلي: <a href="http://www.cosinekitty.com/solar_system.html" target="_blank" style="color: var(--stel-info, #66D9EF);">Don Cross</a></span>
+        <span style="margin: 0 8px;">|</span>
+        <span>التطوير والترجمة: <strong>قتيبة أقرع</strong></span>
+        <span style="margin: 0 8px;">|</span>
+        <span>انظر أيضاً: <a href="http://www.cosinekitty.com/astro_calendar.html" target="_blank" style="color: var(--stel-info, #66D9EF);">التقويم الفلكي</a> | <a href="http://www.cosinekitty.com/sky_view.html" target="_blank" style="color: var(--stel-info, #66D9EF);">منظر السماء</a></span>
+    </div>
+</div>
+<hr style="border-color: var(--stel-border, #333);" />
 <div class="solar-dashboard">
     
     <!-- صف الخريطة والرسم البياني -->
@@ -439,7 +453,67 @@
     <div id="divDateTime"></div>
     
     <!-- منطقة المعلومات -->
+<!-- ============================================================ -->
+<!-- قسم دليل استخدام الواجهة (جديد)                              -->
+<!-- ============================================================ -->
+<div>
+    <input type="button" class="button" onclick="return toggleMe('para_guide')" value="📖 دليل استخدام الواجهة" style="background: #596178; color: #fff; border: solid 1px #ffcf31; font-weight:bold; padding:5px 15px; border-radius:4px; cursor:pointer;">
+</div>
+<div id="para_guide" style="display:none; padding: 15px; background: var(--stel-bg-panel, rgba(149,150,152,0.1)); border-radius: var(--stel-radius-lg, 6px); margin: 10px 0; border: 1px solid var(--stel-border, #444);">
+    <h3 style="color: var(--stel-accent, #d4b896); margin-top: 0; border-bottom: 1px solid var(--stel-border, #444); padding-bottom: 8px;">دليل استخدام الحاسبة الفلكية</h3>
+    
+    <p style="font-size: 14px; line-height: 1.7;">
+        توفر هذه الصفحة محاكاة تفاعلية للمجموعة الشمسية مع خيارات عرض متعددة. إليك شرح للمكونات الرئيسية:
+    </p>
 
+    <ul style="font-size: 13px; line-height: 1.8; padding-right: 20px;">
+        <li><strong>نظام الإحداثيات المتعامدة (الكارتيزية):</strong> اختر بين <strong>"مركزه الشمس"</strong> (إحداثيات نسبة للشمس) أو <strong>"مركزه الأرض"</strong> (إحداثيات نسبة للأرض). تظهر القيم في الجدول مباشرة ويُعكس تأثيرها على الرسم فوراً.</li>
+        
+        <li><strong>الإحداثيات الزاوية:</strong> غيّر طريقة عرض الزوايا في الجدول بين <strong>بروجية</strong> (نسبة لمستوى مدار الأرض)، <strong>استوائية</strong> (نسبة لخط استواء الأرض)، أو <strong>سمتية</strong> (نسبة لأفق الراصد).</li>
+        
+        <li><strong>الرسم ثنائي الأبعاد (الكانفاس):</strong> يعرض منظراً علوياً من القطب الشمالي للمجموعة الشمسية.
+            <ul>
+                <li><strong>المحاور:</strong> المحور X (أفقي) والمحور Y (عمودي) مع ترقيم بوحدة <strong>الوحدة الفلكية (AU)</strong>. القيم الموجبة لـ Y تتجه للأعلى.</li>
+                <li><strong>التكبير:</strong> استخدم عجلة الفأرة أو أزرار التكبير/التصغير لتغيير مدى الرؤية.</li>
+                <li><strong>المدارات:</strong> دوائر منقطة رمادية تمثل المدارات التقريبية للأجرام حول الشمس.</li>
+                <li><strong>تبديل المركز:</strong> في وضع "مركزه الأرض"، تنزاح المدارات لتتمركز حول موقع الشمس الحالي.</li>
+            </ul>
+        </li>
+
+        <li><strong>الرسم ثلاثي الأبعاد (Three.js):</strong> اضغط زر <strong>"🌍 عرض 3D"</strong> للانتقال إلى الفضاء ثلاثي الأبعاد.
+            <ul>
+                <li><strong>التحكم:</strong> اسحب بالماوس لتدوير المشهد، واستخدم عجلة الفأرة للتكبير والتصغير.</li>
+                <li><strong>المحاور:</strong> تظهر المحاور X (أحمر)، Y (أخضر/ارتفاع)، Z (أزرق/عمق) مع تسميات واضحة.</li>
+                <li><strong>التسميات:</strong> أسماء الأجرام تظهر فوقها مباشرة بلون يتناسب مع لون الكوكب.</li>
+            </ul>
+        </li>
+
+        <li><strong>التحكم بالزمن والمحاكاة:</strong> 
+            <ul>
+                <li><strong>الوقت الحقيقي:</strong> فعّل الخيار لتحديث الوقت تلقائياً من جهازك كل ثانية.</li>
+                <li><strong>التحكم اليدوي:</strong> عدّل حقول (سنة، شهر، يوم، ساعة، دقيقة، ثانية) واضغط <strong>"تعيين"</strong> لتحديد وقت معين.</li>
+                <li><strong>تسريع المحاكاة:</strong> استخدم أزرار السرعة (<strong>1x، 10x، 100x، 1000x، 10000x</strong>) لرؤية حركة الكواكب عبر الزمن بسرعة مذهلة.</li>
+                <li><strong>إبطاء / مضاعفة:</strong> استخدم الأزرار <strong>⏪ (إبطاء)</strong> و <strong>⏩ (تسريع)</strong> لتعديل السرعة تدريجياً.</li>
+                <li><strong>إيقاف مؤقت / استئناف:</strong> زر <strong>⏸️</strong> لتجميد الزمن ودراسة الوضع الحالي بدقة.</li>
+                <li><strong>العودة للحاضر:</strong> زر <strong>⟲</strong> يعيدك فوراً إلى الوقت الحقيقي ويضبط السرعة على 1x.</li>
+            </ul>
+        </li>
+
+        <li><strong>الموقع الجغرافي والخريطة:</strong> 
+            <ul>
+                <li>يمكنك إدخال خط الطول والعرض يدوياً أو استخدام <strong>الخريطة التفاعلية</strong> بالنقر أو سحب العلامة لتحديد موقعك بدقة.</li>
+                <li>يؤثر الموقع على حساب أوقات الشروق والغروب والارتفاع في الإحداثيات السمتية.</li>
+            </ul>
+        </li>
+
+        <li><strong>فلاتر العرض:</strong> يمكنك تخصيص الجدول لإظهار فقط <strong>الأجرام اللامعة</strong> (المرئية بالعين المجردة)، أو <strong>الأجرام فوق الأفق</strong>، أو إظهار/إخفاء <strong>المذنبات</strong> و <strong>الكويكبات الصغيرة</strong>.</li>
+    </ul>
+
+    <p style="font-size: 13px; color: var(--stel-text-muted, #aaa); margin-top: 15px; border-top: 1px solid var(--stel-border, #444); padding-top: 10px;">
+        <strong>ملاحظة:</strong> جميع القيم والإحداثيات معروضة بوحدة <strong>الوحدة الفلكية (AU)</strong> ما لم يُنص على خلاف ذلك. شروق وغروب الأجرام يحسبان مع مراعاة الانكسار الجوي.
+    </p>
+</div>
+<!-- ============================================================ -->
         
         <div style="display:flex; flex-direction:column; gap:8px;">
             <div class="collapsible-section">
@@ -490,6 +564,7 @@
 								<p><ul>
 									<li><a href="../external.html?link=http://www.stargazing.net/kepler/">Approximate astronomical positions</a> - by <a href="../external.html?link=http://www.stargazing.net/kepler/kpb.html">Keith Burnett</a>.</li>
 								</ul></p>
+								<span style="font-family:Sans-Serif; font-size:small;">انظر أيضا : [<a href="http://www.cosinekitty.com/astro_calendar.html">Astronomy Calendar</a>	|   <a href="http://www.cosinekitty.com/sky_view.html">Sky View</a>								]</span>
 							</div>
             </div>
             <div class="collapsible-section">
